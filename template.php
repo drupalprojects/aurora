@@ -31,7 +31,7 @@
  *    An array of regions.  The first array element will be used as the default region for themes.
  *    Each array element takes the format: variable_name => t('human readable name')
  */
-function bluebreeze_regions() {
+function aurora_regions() {
   return array(
        'left' => t('left sidebar'),
        'right' => t('right sidebar'),
@@ -52,7 +52,7 @@ function bluebreeze_regions() {
  *  the prefix from theme_ to zen_.  For example:
  *
  *   original:  theme_breadcrumb() 
- *   theme override:   bluebreeze_breadcrumb()
+ *   theme override:   aurora_breadcrumb()
  *
  *  See the following example. In this theme, we want to change all of the breadcrumb separator links from  >> to ::
  *
@@ -65,7 +65,7 @@ function bluebreeze_regions() {
   *   An array containing the breadcrumb links.
   * @return a string containing the breadcrumb output.
   */
-/* function bluebreeze_breadcrumb($breadcrumb) {
+/* function aurora_breadcrumb($breadcrumb) {
    if (!empty($breadcrumb)) {
      return '<div class="breadcrumb">'. implode(' :: ', $breadcrumb) .'</div>';
    }
