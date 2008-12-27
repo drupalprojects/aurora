@@ -12,37 +12,6 @@
 
  
 /**
-* MODIFYING OR CREATING REGIONS
-*
-* Regions are areas in your theme where you can place blocks.
-* The default regions used in themes  are "left sidebar", "right sidebar", "header", and "footer",  although you can create
-* as many regions as you want.  Once declared, they are made available to the page.tpl.php file as a variable.  
-* For instance, we use <?php print $header ?> for the placement of the "header" region in page.tpl.php.
-* 
-* By going to  the administer > site building > blocks page you can choose which regions various blocks should be placed.
-* New regions you define here will automatically show up in the drop-down list by their human readable name.
- */
- 
- 
-/**
- * Declare the available regions implemented by this engine.
- *
- * @return
- *    An array of regions.  The first array element will be used as the default region for themes.
- *    Each array element takes the format: variable_name => t('human readable name')
- */
-function aurora_regions() {
-  return array(
-       'left' => t('left sidebar'),
-       'right' => t('right sidebar'),
-       'content_top' => t('content top'),
-       'content_bottom' => t('content bottom'),
-       'header' => t('header'),
-       'footer' => t('footer')
-  );
-} 
-
-/**
  * OVERRIDING THEME FUNCTIONS
  *
  *  The Drupal theme system uses special theme functions to generate HTML output automatically.
@@ -91,24 +60,16 @@ function aurora_regions() {
  */
 
  
-/**
- * Intercept template variables
- *
- * @param $hook
- *   The name of the theme function being executed
- * @param $vars
- *   A sequential array of variables passed to the theme function.
- */
-
-function _phptemplate_variables($hook, $vars = array()) {
-  switch ($hook) {
-    // Send a new variable, $has_terms, to see wether the current node has any terms
-    case 'node':   
-      if(count(taxonomy_node_get_terms($vars['node']->nid)))
-        $vars['has_terms'] = TRUE;
-      else
-        $vars['has_terms'] = FALSE;
-  }
-  
+function aurora_preprocess_node(&$vars) {
+  // Send a new variable, $has_terms, to see wether the current node has any terms
+  $vars['has_terms'] = count(taxonomy_node_get_terms($vars['node'])) > 0;
   return $vars;
+}
+
+function aurora_tabs($tabs, $attributes = array()) {
+  $attributes['class'] .= ' tabs';
+  $out = '<ul class="tabs">';
+  foreach ($tabs as $tab) $out .= theme('menu_local_task', theme('menu_item_link', $tab));
+  $out .= '</ul>';
+  return $out;
 }

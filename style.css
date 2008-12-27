@@ -233,8 +233,7 @@ body, #page, #front, #second {
   margin: 0 0 0 0px;
   border-top: 3px solid #2f2f2f;
   border-left: 3px solid #2f2f2f;
-  border-right: 3px solid #2f2f2f;
-  
+  border-right: 3px solid #2f2f2f; 
 }
 
 #primary ul {
@@ -251,7 +250,7 @@ body, #page, #front, #second {
   
 }
 
-#primary ul li a, #primary ul li a:visited {
+#primary ul li a, #primary a:visited {
   display: block;
   margin: 0 4px 0 0px;
   padding: 6px .8em 6px .8em;
@@ -263,7 +262,11 @@ body, #page, #front, #second {
   line-height: 12px;
   font-size: 12px;
   background-color: #2f2f2f;
-  
+
+}
+
+#primary ul li a.active {
+  background-color: #6f6f6f;
 }
 
 #primary ul li a:hover {
@@ -377,9 +380,9 @@ body, #page, #front, #second {
 #footer {
   text-align: center;
   vertical-align: middle;
-  line-height: 37px;
-  height: 37px;
-  background: url(images/bg-footer.gif) #1d1e1f repeat-x;
+  /*line-height: 37px;
+  height: 37px;*/
+  background: url(images/bg-footer.gif) #3a3a3a repeat-x bottom;
   margin: 0 0 10px 0;
   color: #a9a9a9;
   border: 3px solid #2f2f2f;
@@ -521,6 +524,10 @@ fieldset.collapsed {
   color: #9CA6B4;
   background-color: #FBFCFE;
   vertical-align: bottom;
+}
+
+#search label {
+  display:none; /* remove the Search this site label */
 }
 
 #search input.form-submit, #user-login-form input.form-submit  {

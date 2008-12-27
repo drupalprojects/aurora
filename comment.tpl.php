@@ -4,5 +4,10 @@
 <?php if ($picture) print $picture; ?>
     <div class="submitted"><?php print t('On ') . format_date($comment->timestamp, 'custom', 'F jS, Y'); ?> <?php print theme('username', $comment) . t(' says:'); ?></div>
     <div class="content"><?php print $content; ?></div>
+    <?php if ($signature): ?>
+      <div class="user-signature clear-block">
+        <?php print $signature ?>
+      </div>
+    <?php endif; ?>
     <div class="links"><?php print $links; ?></div>
 </div>

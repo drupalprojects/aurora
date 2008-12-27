@@ -1,5 +1,5 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" lang="<?php print $language ?>" xml:lang="<?php print $language ?>">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="<?php print $language->language ?>" xml:lang="<?php print $language->language ?>">
 
 <head>
   <title><?php print $head_title ?></title>
@@ -10,7 +10,7 @@
   </head>
 
 <body id="<?php if ($is_front) { print 'home'; } else { print 'second'; } ?>">
-  <div id="page" class="<?php if ($sidebar_left || $sidebar_right) { print "one-sidebar"; } if ($sidebar_right && $sidebar_left) { print " two-sidebars"; }?>">
+  <div id="page" class="<?php if ($left || $right) { print "one-sidebar"; } if ($right && $left) { print " two-sidebars"; }?>">
   
     <div id="header">
     
@@ -40,7 +40,7 @@
       <div class="menu <?php if ($primary_links) { print "withprimary"; } if ($secondary_links) { print " withsecondary"; } ?> ">          
           <?php if ($secondary_links): ?>
             <div id="secondary" class="clear-block">
-              <?php print theme('menu_links', $secondary_links) ?>
+              <?php print aurora_tabs($secondary_links, array('class' => 'secondary')) ?>
             </div>
           <?php endif; ?>
 
@@ -56,14 +56,14 @@
 	
 		 <?php if ($primary_links): ?>
             <div id="primary" class="clear-block">
-              <?php print theme('menu_links', $primary_links) ?>
+              <?php print aurora_tabs($primary_links, array('class' => 'primary')) ?>
             </div>
           <?php endif; ?>
 		  
 	      
 
 	
-	<div id="container" class="<?php if ($sidebar_left) { print "withleft"; } if ($sidebar_right) { print " withright"; }?> clear-block">     
+	<div id="container" class="<?php if ($left) { print "withleft"; } if ($right) { print " withright"; }?> clear-block">     
       <div id="main-wrapper">	  
       <div id="main" class="clear-block">
         <?php print $breadcrumb ?>
@@ -78,22 +78,23 @@
       </div>
       </div>
       
-      <?php if ($sidebar_left): ?>
+      <?php if ($left): ?>
         <div id="sidebar-left" class="sidebar">
           <?php print $search_box ?>     
-          <?php print $sidebar_left ?>
+          <?php print $left ?>
         </div>
       <?php endif; ?>  
 
-      <?php if ($sidebar_right): ?>
+      <?php if ($right): ?>
         <div id="sidebar-right" class="sidebar">
-          <?php print $sidebar_right ?>
+          <?php print $right ?>
         </div>
       <?php endif; ?>
 
     </div>
 
     <div id="footer">
+      <?php print $footer ?>
       <?php print $footer_message ?>
     </div>
 	<div class="copy">
@@ -103,6 +104,5 @@
     <?php print $closure ?>
     
   </div>
-
 </body>
 </html>
