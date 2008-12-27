@@ -97,7 +97,7 @@
       <?php print $footer_message ?>
     </div>
 	<div class="copy">
-		<p>Powered by <a href="http://www.drupal.org/">Drupal</a> - <!-- Please do not remove this command line --> Design by <a href="http://www.artinet/">artinet</a></p>
+		<p>Powered by <a href="http://www.drupal.org/">Drupal</a> - <!-- Please do not remove this command line --> Design by <a href="http://www.artinet.ru/">artinet</a></p>
 	</div>
     
     <?php print $closure ?>
