@@ -5,9 +5,15 @@
 @import 'aura';
 
 //////////////////////////////
+// Bring in Functions, Mixins, Silents, and Variables.
+//////////////////////////////
+@import 'variables';
+@import 'mixins';
+@import 'functions';
+@import 'extendables';
+
+//////////////////////////////
 // Implement a Natural Box Model
 // From http://paulirish.com/2012/box-sizing-border-box-ftw/
 //////////////////////////////
-* { 
-  @include box-sizing(border-box);
-}
+* { @include box-sizing(border-box); }
