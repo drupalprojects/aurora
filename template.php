@@ -97,16 +97,3 @@ function aurora_preprocess_flexslider_views_slideshow_main_frame_row(&$vars) {
   $vars['rendered_items'] = str_replace('<div class="flexslider-views-slideshow-main-frame-row-item views-row views-row-0 views-row-first views-row-odd">', '', $vars['rendered_items']);
   $vars['rendered_items'] = substr($vars['rendered_items'], 0, -9);
 }
-
-/**
- * Implements hook_preprocess_views_slideshow().
- */
-function aurora_preprocess_views_slideshow(&$vars) {
-  // Set Hide Skin variable to hide skin div.
-  $vars['hide_skin'] = false;
-  
-  // If using the recommended Flexslider, hide skin.
-  if ($vars['options']['slideshow_type'] == 'flexslider_views_slideshow') {
-    $vars['hide_skin'] = true;
-  }
-}
