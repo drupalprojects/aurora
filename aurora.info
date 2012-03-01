@@ -4,3 +4,11 @@ core = 7.x
 base theme = html5
 
 stylesheets[screen][] = css/style.css
+
+regions[sidebar_first]  = Primary Sidebar
+regions[sidebar_second] = Secondary Sidebar
+regions[content]        = Content
+regions[footer]         = Footer
+regions[header]         = Header
+regions[help]           = Help
+regions[highlighted]    = Highlighted
