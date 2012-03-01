@@ -1,0 +1,27 @@
+#sidebar-second {
+  @include columns(sidebar-width($overflow: false));
+  
+  @if nth($sidebars, 2) == 'left' {
+    float: none;
+    @include respond-to('small') {
+      float: left;
+    }
+  }
+  @else if nth($sidebars, 2) == 'right' or nth($sidebars, 2) == 'both' {
+    float: none;
+    @include respond-to('small') {
+      float: right;
+      margin-left: 0;
+      margin-right: gutter();
+    }
+  }
+  @else if nth($sidebars, 2) == 'none' {
+    float: none;
+    @include respond-to('small') {
+      float: right;
+    }
+  }
+  @else {
+    @warn 'Sidebar side can only have a value of left, right, both, or none';
+  }
+}
