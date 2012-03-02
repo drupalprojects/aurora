@@ -1,34 +1,3 @@
 #content {
   @extend %measure;
-  
-  @if nth($sidebars, 2) == 'left' or nth($sidebars, 2) == 'both'{
-    float: none;
-    @include respond-to('small') {
-      float: right;
-    }
-  }
-  @else if nth($sidebars, 2) == 'right' {
-    float: none;
-    @include respond-to('small') {
-      @include alpha();
-      float: left;
-    }
-  }
-  @else if nth($sidebars, 2) == 'none' {
-    float: none;
-    @include respond-to('small') {
-      @include alpha();
-      float: left;
-    }
-  }
-  // Add in "Omega"
-  @if nth($sidebars, 2) == 'left' {
-    @include respond-to('small') {
-      margin-left: 0;
-      margin-right: gutter();
-    }
-  }
-  @else {
-    @warn 'Sidebar side can only have a value of left, right, both, or none';
-  }
 }
