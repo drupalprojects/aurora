@@ -1,0 +1,14 @@
+name = Starterkit
+description = Starterkit for Aurora
+core = 7.x
+base theme = aurora
+
+stylesheets[screen][] = css/style.css
+
+regions[sidebar_first]  = Primary Sidebar
+regions[sidebar_second] = Secondary Sidebar
+regions[content]        = Content
+regions[footer]         = Footer
+regions[header]         = Header
+regions[help]           = Help
+regions[highlighted]    = Highlighted

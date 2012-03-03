@@ -1,0 +1,9 @@
+@mixin nav-icons($icons, $path) {
+  $i: 1;
+  @each $icon in $icons {
+    li:nth-child(#{$i}) a {
+      background-image: url('../images/ui/#{$path}#{$icon}');
+    }
+    $i: $i + 1;
+  }
+}

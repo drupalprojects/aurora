@@ -1,0 +1,108 @@
+//////////////////////////////
+// Sidebar Functions
+//////////////////////////////
+@function sidebar-width($overflow: TRUE) {
+  // Grab number of sidebars and the side
+  $num: nth($sidebars, 1);
+  $side: nth($sidebars, 2);
+  
+  @if $num > 2 or $num < 0 {
+    @warn 'Invalid number of sidebars! You can have 0, 1, or 2 sidebars!';
+    @return -1;
+  }
+  
+  // Grab length of sidebar variable to determine how to act
+  $length: length($sidebars);
+  
+  @if $length < 2 {
+    @warn "Not enough arguments! You need to provide at least the number of sidebars and the side of the sidebar! If you do not want sidebars, set $sidebars: 0, 'none';";
+    @return -1;
+  }
+  @else if $length > 4 {
+    @warn "Too many arguments! "
+  }
+  
+  @if $length == 2 {
+    @if $num == 0 {
+      $total-cols: $main-content-cols;
+      @return 0;
+    }
+    @else if $num == 1 {
+      @return $total-cols - $main-content-cols;
+    }
+    @else if $num == 2 {
+      $remainder: $total-cols - $main-content-cols;
+      $floor: floor($remainder / 2);
+      $extra: $remainder - $floor;
+      $big: '';
+      $small: '';
+      @if $floor > $extra {
+        $big: $floor;
+        $small: $extra;
+      }
+      @else if $extra > $floor {
+        $big: $extra;
+        $small: $floor;
+      }
+      @else {
+        $big: $floor;
+        $small: $extra;
+      }
+      
+      @if $overflow {
+        @return $big;
+      }
+      @else {
+        @return $small;
+      }
+    }
+    @else {
+      @warn 'Invalid number of sidebars! You can have 0, 1, or 2 sidebars!';
+    }
+  }
+  @else if $length == 3 {
+    @if $num == 0 {
+      $total-cols: $main-content-cols;
+      @return 0;
+    }
+    @else if $num == 1 {
+      $total-cols: $main-content-cols + nth($sidebars, 3);
+      @return nth($sidebars, 3);
+    }
+    @else if $num == 2 {
+      $total-cols: $main-content-cols + 2 * nth($sidebars, 3);
+      @return nth($sidebars, 3);
+    }
+  }
+  @else if $length == 4 {
+   @if $num == 0 {
+      $total-cols: $main-content-cols;
+      @return 0;
+    }
+    @else if $num > 1 {
+      $total-cols: $main-content-cols + nth($sidebars, 3) + nth($sidebars, 4);
+      
+      $big: '';
+      $small: '';
+      
+      @if nth($sidebars, 3) > nth($sidebars, 4) {
+        $big: nth($sidebars, 3);
+        $small: nth($sidebars, 4);
+      }
+      @else if nth($sidebars, 3) < nth($sidebars, 4) {
+        $big: nth($sidebars, 4);
+        $small: nth($sidebars, 3);
+      }
+      @else {
+        $big: nth($sidebars, 3);
+        $small: nth($sidebars, 4);
+      }
+      @if $overflow {
+        @return $big;
+      }
+      @else {
+        @return $small;
+      }
+    }
+  }
+}
