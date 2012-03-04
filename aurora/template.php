@@ -21,13 +21,13 @@ function aurora_preprocess_html(&$vars) {
     '#tag' => 'meta',
     '#attributes' => array(
       'name' => 'viewport',
-      'content' => 'width=device-width,initial-scale=1',
+      'content' => 'width=device-width, initial-scale=1',
     ),
   );
   drupal_add_html_head($viewport, 'viewport');
   
-  // Chrome Frome for IE<=8
-  $chromeframe['wrapper'] = '<!--[if lt IE 9 ]>';
+  // Chrome Frome for IE<=9
+  $chromeframe['wrapper'] = '<!--[if lt IE 10 ]>';
   $chromeframe['include']['element'] = array(
     '#tag' => 'script',
     '#attributes' => array(
