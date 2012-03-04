@@ -90,6 +90,16 @@ function aurora_preprocess_views_view_fields(&$vars) {
 }
 
 /**
+ * Implements hook_preprocess_views_slideshow()
+ */
+function aurora_preprocess_views_slideshow(&$vars) {
+  $vars['hide_skin'] = false;
+  if ($vars['options']['slideshow_type'] == 'flexslider_views_slideshow') {
+    $vars['hide_skin'] = true;
+  }
+}
+
+/**
  * Implements hook_preprocess_flexslider_views_slideshow_main_frame_row().
  */
 function aurora_preprocess_flexslider_views_slideshow_main_frame_row(&$vars) {
