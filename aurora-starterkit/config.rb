@@ -2,7 +2,7 @@
 require 'aura'
 
 # Set this to the root of your project when deployed:
-http_path = "/sites/all/themes/starterkit"
+http_path = "/sites/all/themes/aurora-starterkit"
 css_dir = "css"
 sass_dir = "sass"
 images_dir = "images"
