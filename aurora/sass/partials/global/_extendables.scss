@@ -1,7 +1,11 @@
 //////////////////////////////
-// Return to Classic Box Model
+// Border Box/Content Box
 // http://paulirish.com/2012/box-sizing-border-box-ftw/#comment-111805
 //////////////////////////////
-%unborderbox {
+%borederbox {
+  @include box-sizing(border-box);
+}
+
+%contentbox {
   @include box-sizing(content-box);
 }
