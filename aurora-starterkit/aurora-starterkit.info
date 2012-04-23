@@ -1,6 +1,6 @@
 name = Aurora Starterkit
 description = Starterkit for Aurora
-core = 7.x
+core = 6.x
 base theme = aurora
 
 stylesheets[screen][] = css/style.css
