@@ -1,7 +1,0 @@
-#page {
-  @extend %aura-container;
-  
-  @if $debug == true {
-    @include susy-grid-background;
-  }
-}
