@@ -1,0 +1,18 @@
+@import "compass";
+
+.form-item {
+  display: block;
+  
+  &.form-disabled {
+    display: none;    
+  }
+}
+
+pre {
+  display: inline-block;
+  background-color: lighten(#ccc, 10%);
+  padding: {
+    left: .5em !important;
+    right: .5em !important;
+  }
+}
