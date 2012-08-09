@@ -14,12 +14,18 @@ function aurora_form_system_theme_settings_alter(&$form, &$form_state, $form_id 
    return;
   }
   drupal_add_css(drupal_get_path('theme', 'aurora') . '/css/settings.css');
+  
+  //////////////////////////////
+  // Chrome Frame
+  //////////////////////////////
 
   $form['chromeframe'] = array(
   '#type' => 'fieldset',
   '#title' => t('Chrome Frame'),
-  '#description' => t('Google\'s Chrome Frame is an open source project for Internet Explorer 6, 7, 8, and 9 that allows those version of Internet Explorer to <a href="https://www.youtube.com/watch?v=sjW0Bchdj-w&feature=player_embedded" target="_blank">harness the power of Google Chrome\'s engine</a>.'),
+  '#description' => t('Google\'s Chrome Frame is an open source project for Internet Explorer 6, 7, 8, and 9 that allows those version of Internet Explorer to <a href="!link target="_blank">harness the power of Google Chrome\'s engine</a>.', array('!link' => 'https://www.youtube.com/watch?v=sjW0Bchdj-w&feature=player_embedded"')),
   '#weight' => -100,
+  '#attributes' => array('class' => array('aurora-row-left')),
+  '#prefix' => '<span class="aurora-settigns-row">',
   );
 
   $form['chromeframe']['aurora_enable_chrome_frame'] = array(
@@ -71,23 +77,19 @@ function aurora_form_system_theme_settings_alter(&$form, &$form_state, $form_id 
   else {
    $form['chromeframe']['aurora_min_ie_support']['#disabled'] = true;
   }
+  
+  //////////////////////////////
+  // Optimizations
+  //////////////////////////////
 
   $form['optimizations'] = array(
    '#type' => 'fieldset',
    '#title' => t('Optimizations'),
    '#description' => t('Various little optimizations for your theme.'),
    '#weight' => -99,
+   '#attributes' => array('class' => array('aurora-row-right')),
+   '#suffix' => '</span>',
   );
- 
-  // $form['optimizations']['aurora_min_html'] = array(
-  //   '#type' => 'checkbox',
-  //   '#title' => t('Minimize HTML'),
-  //   '#default_value' => theme_get_setting('aurora_min_html'),
-  //   '#ajax' => array(
-  //     'callback' => 'aurora_chromeframe_ajax_save'
-  //   ),
-  //   '#description' => t('Will run Nathan Smith\'s <a href="http://sonspring.com/journal/html5-in-drupal-7#_minification" target="_blank">page minification</a> over your output HTML.'),
-  // );
  
   $form['optimizations']['aurora_footer_js'] = array(
     '#type' => 'checkbox',
@@ -98,6 +100,60 @@ function aurora_form_system_theme_settings_alter(&$form, &$form_state, $form_id 
     ),
     '#description' => t('Will move all JavaScript to the bottom of your page. This can be overridden on an individual basis by setting the <pre>\'force header\' => true</pre> option in <pre>drupal_add_js</pre> or by using <pre>hook_js_alter</pre> to add the option to other JavaScript files.'),
   );
+  
+  $form['optimizations']['aurora_html_tags'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Prune HTML Tags'),
+    '#default_value' => theme_get_setting('aurora_html_tags'),
+    '#ajax' => array(
+      'callback' => 'aurora_chromeframe_ajax_save'
+    ),
+    '#description' => t('Prunes your <pre>style</pre>, <pre>link</pre>, and <pre>script</pre> tags as <a href="!link" target="_blank"> suggested by Nathan Smith</a>.', array('!link' => 'http://sonspring.com/journal/html5-in-drupal-7#_pruning')),
+  );
+  
+  //////////////////////////////
+  // Development
+  //////////////////////////////
+  
+  $form['development'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Development'),
+    '#description' => t('Theme like you\'ve never themed before! <div class="messages warning"><strong>WARNING:</strong> Both of these options incur huge performance penalties and <em>must</em> be turned off on production websites.</div>'),
+    '#weight' => 52
+  );
+  
+  $form['development']['aurora_rebuild_registry'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Rebuild Theme Registry on Reload'),
+    '#default_value' => theme_get_setting('aurora_rebuild_registry'),
+    '#ajax' => array(
+      'callback' => 'aurora_chromeframe_ajax_save'
+    ),
+    '#description' => t('<a href="!link" target="_blank">Rebuild the theme registry</a> during project development.', array('!link' => 'http://drupal.org/node/173880#theme-registry')),
+  );
+  
+  $form['development']['aurora_livereload'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Enable LiveReload'),
+    '#default_value' => theme_get_setting('aurora_livereload'),
+    '#ajax' => array(
+      'callback' => 'aurora_chromeframe_ajax_save'
+    ),
+    '#description' => t('Enable <a href="!link" target="_blank">LiveReload</a> to refresh your browser without you needing to. Awesome for designing in browser.', array('!link' => 'http://livereload.com/')),
+    '#weight' => 200,
+  );
+  
+  //////////////////////////////
+  // Logo/Favicon Grouping
+  //////////////////////////////
+  
+  $form['logo']['#weight'] = 10;
+  $form['logo']['#attributes']['class'][] = 'aurora-row-left';
+  $form['logo']['#prefix'] = '<span class="aurora-settigns-row">';
+  
+  $form['favicon']['#weight'] = 11;
+  $form['favicon']['#attributes']['class'][] = 'aurora-row-right';
+  $form['favicon']['#suffix'] = '</span>';
 }
 
 function aurora_chromeframe_options($form, $form_state) {
