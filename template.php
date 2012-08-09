@@ -1,5 +1,53 @@
 <?php
 /**
+ * @file
+ * Contains functions to alter Drupal's markup for the Aurora theme.
+ *
+ *        _d^^^^^^^^^b_
+ *     .d''           ``b.
+ *   .p'  @          @   `q.       NOTHING TO DO HERE
+ *  .d'    ----------     `b.
+ * .d'                     `b.
+ * ::                       ::
+ * ::                       ::
+ * ::                       ::
+ * `p.                     .q'
+ *  `p.                   .q'
+ *    `b.               .d'\
+ *     / ^q...........p^    \
+ *    /       ''''bbbbbbb    \
+ *   /  __    __ \bbbbbbbb   /
+ *    \_bbbbbbbb__\________/
+ *       bb   bbbbbbbbbbbbbbb
+ *                bb|bbbbbbb  ***
+ *                 b|bbbbb   ******
+ *       _______    |        **000***
+ *     /         \  |         **00000**
+ *   __|__________\/            ***   **
+ *  /  |                         *      *
+ * |    \                    
+ * |      \__                
+ *  \
+ *   \__
+ *
+ * The Aurora theme is a base theme designed to be easily extended by sub
+ * themes. You should not modify this or any other file in the Aurora theme
+ * folder. Instead, you should create a sub-theme and make your changes there.  
+ * In fact, if you're reading this, you may already off on the wrong foot.
+ *
+ * See the project page for more information:
+ *   http://drupal.org/project/aurora
+ */
+
+// Auto-rebuild the theme registry during theme development.
+if (theme_get_setting('aurora_rebuild_registry') && !defined('MAINTENANCE_MODE')) {
+  // Rebuild .info data.
+  system_rebuild_theme_data();
+  // Rebuild theme registry.
+  drupal_theme_rebuild();
+}
+
+/**
  * Implements hook_preprocess_html()
  */
 function aurora_preprocess_html(&$vars) {
@@ -64,6 +112,14 @@ function aurora_preprocess_html(&$vars) {
       $vars['html_attributes_array']['prefix'][] = $prefix . ': ' . $uri . "\n";
     }
   }
+  
+  //////////////////////////////
+  // LiveReload Integration
+  //////////////////////////////
+  if (theme_get_setting('aurora_livereload')) {
+    drupal_add_js("document.write('<script src=\"http://' + (location.host || 'localhost').split(':')[0] + ':35729/livereload.js?snipver=1\"></' + 'script>')", array('type' => 'inline', 'scope' => 'footer', 'weight' => 9999));
+  }
+  
 }
 
 /**
@@ -89,39 +145,25 @@ function aurora_process_html(&$vars) {
   // Flatten out html_attributes and body_attributes.
   $vars['html_attributes'] = drupal_attributes($vars['html_attributes_array']);
   $vars['body_attributes'] = drupal_attributes($vars['body_attributes_array']);
-  
-  //////////////////////////////
-  // Minify HTML
-  //////////////////////////////
-  // Need to test more, on initial test was giving larger results!
-  // if (theme_get_setting('aurora_min_html')) {
-  //     $before = array(
-  //       "/>\s\s+/",
-  //       "/\s\s+</",
-  //       "/>\t+</",
-  //       "/\s\s+(?=\w)/",
-  //       "/(?<=\w)\s\s+/"
-  //     );
-  // 
-  //     $after = array('> ', ' <', '> <', ' ', ' ');
-  // 
-  //     // Page top.
-  //     $page_top = $vars['page_top'];
-  //     $page_top = preg_replace($before, $after, $page_top);
-  //     $vars['page_top'] = $page_top;
-  // 
-  //     // Page content.
-  //     if (!preg_match('/<pre|<textarea/', $vars['page'])) {
-  //       $page = $vars['page'];
-  //       $page = preg_replace($before, $after, $page);
-  //       $vars['page'] = $page;
-  //     }
-  // 
-  //     // Page bottom.
-  //     $page_bottom = $vars['page_bottom'];
-  //     $page_bottom = preg_replace($before, $after, $page_bottom);
-  //     $vars['page_bottom'] = $page_bottom . drupal_get_js('footer');
-  //   }
+}
+
+/**
+  * Implements hook_process_html_tag
+  *
+  * - From http://sonspring.com/journal/html5-in-drupal-7#_pruning
+  */
+function aurora_process_html_tag(&$vars) {
+  if (theme_get_setting('aurora_html_tags')) {
+    $el = &$vars['element'];
+
+    // Remove type="..." and CDATA prefix/suffix.
+    unset($el['#attributes']['type'], $el['#value_prefix'], $el['#value_suffix']);
+
+    // Remove media="all" but leave others unaffected.
+    if (isset($el['#attributes']['media']) && $el['#attributes']['media'] === 'all') {
+      unset($el['#attributes']['media']);
+    }
+  }
 }
 
 /**
