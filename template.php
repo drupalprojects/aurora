@@ -120,6 +120,14 @@ function aurora_preprocess_html(&$vars) {
     drupal_add_js("document.write('<script src=\"http://' + (location.host || 'localhost').split(':')[0] + ':35729/livereload.js?snipver=1\"></' + 'script>')", array('type' => 'inline', 'scope' => 'footer', 'weight' => 9999));
   }
   
+  //////////////////////////////
+  // RWD Debug Integration
+  //////////////////////////////
+  if (theme_get_setting('aurora_viewport_width') || theme_get_setting('aurora_modernizr_debug')) {
+    drupal_add_css(drupal_get_path('theme', 'aurora') . '/css/debug.css');
+    drupal_add_js(drupal_get_path('theme', 'aurora') . '/js/debug.js');
+  }
+  
 }
 
 /**
@@ -134,6 +142,26 @@ function aurora_process_html(&$vars) {
     $cf = $cf_array['wrapper'] . theme_html_tag($cf_array['include']) . theme_html_tag($cf_array['launch']) . '<![endif]-->';
 
     $vars['page_top'] .= $cf;
+  }
+
+  kpr($vars);
+  
+  //////////////////////////////
+  // RWD Debug Integration
+  //////////////////////////////
+  if (theme_get_setting('aurora_viewport_width') || theme_get_setting('aurora_modernizr_debug')) {
+    
+    $debug_output = '<div id="aurora-debug">';
+    
+    if (theme_get_setting('aurora_viewport_width')) {
+      $debug_output .= '<div id="aurora-viewport-width"></div>';
+    }
+    if (theme_get_setting('aurora_modernizr_debug')) {
+      $debug_output .= '<div id="aurora-modernizr-debug"></div>';
+    }
+    
+    $debug_output .= '</div>';
+    $vars['page_bottom'] .= $debug_output;
   }
   
   //////////////////////////////
