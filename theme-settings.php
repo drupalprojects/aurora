@@ -54,7 +54,7 @@ function aurora_form_system_theme_settings_alter(&$form, &$form_state, $form_id 
     '#prefix' => '<span id="cf-settings">',
     '#suffix' => '</span>',
     '#ajax' => array(
-      'callback' => 'aurora_chromeframe_ajax_save'
+      'callback' => 'aurora_ajax_settings_save'
      ),
   );
 
@@ -96,7 +96,7 @@ function aurora_form_system_theme_settings_alter(&$form, &$form_state, $form_id 
     '#title' => t('Move JavaScript to the Bottom'),
     '#default_value' => theme_get_setting('aurora_footer_js'),
     '#ajax' => array(
-      'callback' => 'aurora_chromeframe_ajax_save'
+      'callback' => 'aurora_ajax_settings_save'
     ),
     '#description' => t('Will move all JavaScript to the bottom of your page. This can be overridden on an individual basis by setting the <pre>\'force header\' => true</pre> option in <pre>drupal_add_js</pre> or by using <pre>hook_js_alter</pre> to add the option to other JavaScript files.'),
   );
@@ -106,7 +106,7 @@ function aurora_form_system_theme_settings_alter(&$form, &$form_state, $form_id 
     '#title' => t('Prune HTML Tags'),
     '#default_value' => theme_get_setting('aurora_html_tags'),
     '#ajax' => array(
-      'callback' => 'aurora_chromeframe_ajax_save'
+      'callback' => 'aurora_ajax_settings_save'
     ),
     '#description' => t('Prunes your <pre>style</pre>, <pre>link</pre>, and <pre>script</pre> tags as <a href="!link" target="_blank"> suggested by Nathan Smith</a>.', array('!link' => 'http://sonspring.com/journal/html5-in-drupal-7#_pruning')),
   );
@@ -118,7 +118,7 @@ function aurora_form_system_theme_settings_alter(&$form, &$form_state, $form_id 
   $form['development'] = array(
     '#type' => 'fieldset',
     '#title' => t('Development'),
-    '#description' => t('Theme like you\'ve never themed before! <div class="messages warning"><strong>WARNING:</strong> Both of these options incur huge performance penalties and <em>must</em> be turned off on production websites.</div>'),
+    '#description' => t('Theme like you\'ve never themed before! <div class="messages warning"><strong>WARNING:</strong> These options incur huge performance penalties and <em>must</em> be turned off on production websites.</div>'),
     '#weight' => 52
   );
   
@@ -127,7 +127,7 @@ function aurora_form_system_theme_settings_alter(&$form, &$form_state, $form_id 
     '#title' => t('Rebuild Theme Registry on Reload'),
     '#default_value' => theme_get_setting('aurora_rebuild_registry'),
     '#ajax' => array(
-      'callback' => 'aurora_chromeframe_ajax_save'
+      'callback' => 'aurora_ajax_settings_save'
     ),
     '#description' => t('<a href="!link" target="_blank">Rebuild the theme registry</a> during project development.', array('!link' => 'http://drupal.org/node/173880#theme-registry')),
   );
@@ -137,11 +137,33 @@ function aurora_form_system_theme_settings_alter(&$form, &$form_state, $form_id 
     '#title' => t('Enable LiveReload'),
     '#default_value' => theme_get_setting('aurora_livereload'),
     '#ajax' => array(
-      'callback' => 'aurora_chromeframe_ajax_save'
+      'callback' => 'aurora_ajax_settings_save'
     ),
     '#description' => t('Enable <a href="!link" target="_blank">LiveReload</a> to refresh your browser without you needing to. Awesome for designing in browser.', array('!link' => 'http://livereload.com/')),
     '#weight' => 200,
   );
+	
+	$form['development']['aurora_viewport_width'] = array(
+		'#type' => 'checkbox',
+		'#title' => t('Enable Viewport Width Indicator'),
+		'#default_value' => theme_get_setting('aurora_viewport_width'),
+		'#ajax' => array(
+	      'callback' => 'aurora_ajax_settings_save'
+	    ),
+	    '#description' => t('Displays an indicator of the viewport. Tap/click to toggle between <em>em</em> and <em>px</em>/'),
+	    '#weight' => 225,
+	);
+	
+	$form['development']['aurora_modernizr_debug'] = array(
+		'#type' => 'checkbox',
+		'#title' => t('Enable Modernizr Indicator'),
+		'#default_value' => theme_get_setting('aurora_modernizr_debug'),
+		'#ajax' => array(
+	      'callback' => 'aurora_ajax_settings_save'
+	    ),
+	    '#description' => t('Displays an indicator of <a href="!link" target="_blank">Modernizr</a> detected features. Tap/click to toggle display of all of the available features.', array('!link' => 'http://modernizr.com/')),
+	    '#weight' => 250,
+	);
   
   //////////////////////////////
   // Logo/Favicon Grouping
@@ -175,7 +197,7 @@ function aurora_chromeframe_options($form, $form_state) {
   return '';
 }
 
-function aurora_chromeframe_ajax_save($form, $form_state) {
+function aurora_ajax_settings_save($form, $form_state) {
   $theme = $form_state['build_info']['args'][0];
   $theme_settings = variable_get('theme_' . $theme . '_settings', array());
   $trigger = $form_state['triggering_element'] ['#name'];
