@@ -100,6 +100,11 @@ pre {
 
 #edit-theme-settings {
   clear: both;
+  
+  margin-bottom: 0;
+  @include breakpoint($row-one-to-two) {
+    margin-bottom: 1em;
+  }
 }
 
 .aurora-settigns-row {
