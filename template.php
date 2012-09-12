@@ -143,8 +143,6 @@ function aurora_process_html(&$vars) {
 
     $vars['page_top'] .= $cf;
   }
-
-  kpr($vars);
   
   //////////////////////////////
   // RWD Debug Integration
