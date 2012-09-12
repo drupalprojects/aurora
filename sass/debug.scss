@@ -18,11 +18,14 @@
 }
 
 #aurora-debug {
+  font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif; 
+  font-weight: 300;
   font-size: 16px;
   color: invert(#333);
   
   position: fixed;
   bottom: .5em;
+  left: .5em;
   right: .5em;
   
   z-index: 999999;
