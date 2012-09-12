@@ -32,6 +32,10 @@ jQuery(function($) {
       else if (viewportStatus == 'em') {
         viewportWidth.html(widthEM + 'em');
       }
+      else {
+        viewportWidth.html(widthEM + 'em');
+        localStorage.setItem("Aurora Viewport Storage", 'em');
+      }
     }
     
     
