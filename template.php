@@ -155,7 +155,7 @@ function aurora_process_html(&$vars) {
       $debug_output .= '<div id="aurora-viewport-width"></div>';
     }
     if (theme_get_setting('aurora_modernizr_debug')) {
-      $debug_output .= '<div id="aurora-modernizr-debug"></div>';
+      $debug_output .= '<div id="aurora-modernizr-debug" class="open"></div>';
     }
     
     $debug_output .= '</div>';

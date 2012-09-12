@@ -59,3 +59,12 @@
     }
   }
 }
+
+#aurora-modernizr-debug {
+  &.open {
+    height: auto;
+  }
+  &.closed {
+    height: 1.5em;
+  }
+}
