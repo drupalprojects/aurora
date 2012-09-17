@@ -172,6 +172,25 @@ function aurora_process_html(&$vars) {
   $vars['html_attributes'] = drupal_attributes($vars['html_attributes_array']);
   $vars['body_attributes'] = drupal_attributes($vars['body_attributes_array']);
 }
+/**
+ * Return a themed breadcrumb trail.
+ *
+ * @param $variables
+ *   - title: An optional string to be used as a navigational heading to give
+ *     context for breadcrumb links to screen-reader users.
+ *   - title_attributes_array: Array of HTML attributes for the title. It is
+ *     flattened into a string within the theme function.
+ *   - breadcrumb: An array containing the breadcrumb links.
+ * @return
+ *   A string containing the breadcrumb output.
+ *
+ * Lifted from Zen, because John is the man.
+ */
+function aurora_breadcrumb(&$vars) {
+  if (theme_get_setting('toggle_breadcrumbs')) {
+    return theme_breadcrumb($vars);
+  }
+}
 
 /**
   * Implements hook_process_html_tag

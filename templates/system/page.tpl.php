@@ -99,12 +99,10 @@
       <?php print render($page['header']); ?>
 
     </header>
-
-    <?php if ($main_menu || $secondary_menu): ?>
-      <nav role="navigation">
-        <?php print theme('links__system_main_menu', array('links' => $main_menu, 'attributes' => array('id' => 'main-menu', 'class' => array('links', 'inline', 'clearfix')), 'heading' => t('Main menu'))); ?>
-        <?php print theme('links__system_secondary_menu', array('links' => $secondary_menu, 'attributes' => array('id' => 'secondary-menu', 'class' => array('links', 'inline', 'clearfix')), 'heading' => t('Secondary menu'))); ?>
-      </nav>
+    
+    <!-- #content-prefix -->
+    <?php if ($page['main_prefix']) :?>
+      <?php print render($page['main_prefix']); ?>
     <?php endif; ?>
 
     <?php print $breadcrumb; ?>
@@ -141,6 +139,11 @@
       <?php endif; ?>
 
     </div><!-- #main -->
+    
+    <!-- #content-suffix -->
+    <?php if ($page['main_suffix']) :?>
+      <?php print render($page['main_suffix']); ?>
+    <?php endif; ?>
 
     <footer id="footer" role="contentinfo">
       <?php print render($page['footer']); ?>
