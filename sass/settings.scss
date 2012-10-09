@@ -53,6 +53,10 @@ pre {
   }
 }
 
+input {
+  max-width: 100%;
+}
+
 #system-theme-settings * {
 //  @include container;
   @include box-sizing('border-box');
