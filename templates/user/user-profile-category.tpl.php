@@ -25,9 +25,11 @@
  */
 ?>
 <section class="<?php print $classes; ?>">
-  <?php if ($title) : ?>
-    <h2><?php print $title; ?></h2>
-  <?php endif; ?>
+  <header>
+    <?php if ($title) : ?>
+      <h2><?php print $title; ?></h2>
+    <?php endif; ?>
+  </header>
 
   <dl<?php print $attributes; ?>>
     <?php print $profile_items; ?>
