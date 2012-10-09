@@ -308,9 +308,10 @@ function aurora_preprocess_user_profile_category(&$variables) {
  */
 function aurora_css_alter(&$css) {
   // Path to the theme's CSS directory.
-  $dir = drupal_get_path('theme', 'html5') . '/css';
+  $dir = drupal_get_path('theme', 'aurora') . '/css';
 
-  // Swap out aggregator.css with the aggregator.theme.css provided by this theme.
+  // Swap out aggregator.css with the aggregator.theme.css provided by this
+  // theme.
   $aggregator = drupal_get_path('module', 'aggregator');
   if (isset($css[$aggregator . '/aggregator.css'])) {
     $css[$aggregator . '/aggregator.css']['data'] = $dir . '/aggregator/aggregator.theme.css';
@@ -345,4 +346,14 @@ function aurora_css_alter(&$css) {
 function aurora_preprocess_node(&$variables) {
   // Add article ARIA role.
   $variables['attributes_array']['role'] = 'article';
+}
+
+/**
+  * Implements hook_js_alter
+  */
+function aurora_js_alter(&$js) {
+  // Forces Modernizr to header if the Modernizr module is enabled.
+  if (module_exists('modernizr')) {
+    $js[modernizr_get_path()]['force header'] = true;
+  }
 }
