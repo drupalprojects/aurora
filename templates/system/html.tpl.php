@@ -40,7 +40,11 @@
  * @see template_process()
  */
 ?><!DOCTYPE html>
-<html<?php print $html_attributes; ?>>
+<!--[if lt IE 7 ]> <html class="ie6 no-js" <?php print $html_attributes; ?>> <![endif]-->
+<!--[if IE 7 ]>    <html class="ie7 no-js" <?php print $html_attributes; ?>> <![endif]-->
+<!--[if IE 8 ]>    <html class="ie8 no-js" <?php print $html_attributes; ?>> <![endif]-->
+<!--[if IE 9 ]>    <html class="ie9 no-js" <?php print $html_attributes; ?>> <![endif]-->
+<!--[if (gt IE 9)|!(IE)]><!--> <html class="no-js" <?php print $html_attributes; ?>> <!--<![endif]-->
   <head>
     <?php print $head; ?>
     <title><?php print $head_title; ?></title>
