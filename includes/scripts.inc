@@ -51,7 +51,7 @@
    // otherwise, keep it in the header.
    // Done again here because scope may change on alter.
    foreach ($javascript as $js_key => $js_value) {
-     if (!empty($js_value['force header']) && $js_value['force header']) {
+     if ($js_value['force header']) {
        $javascript[$js_key]['scope'] = 'header';
      }
      else {
@@ -66,9 +66,9 @@
        $items[$key] = $item;
      }
    }
-
+   
    // Sort the JavaScript so that it appears in the correct order.
-   uasort($items, 'drupal_sort_css_js');
+   uasort($items, 'aurora_sort_css_js');
 
    // In Drupal 8, there's a JS_SETTING group for making setting variables
    // appear last after libraries have loaded. In Drupal 7, this is forced
@@ -76,7 +76,7 @@
    // because PHP uses an internal array pointer for that, and we're modifying
    // the array order inside the loop.
    foreach (array_keys($items) as $key) {
-     if ($items[$key]['type'] == 'setting') {
+     if (!empty($items[$key]['type']) && $items[$key]['type'] == 'setting') {
        $item = $items[$key];
        unset($items[$key]);
        $items[$key] = $item;
@@ -292,7 +292,7 @@ function aurora_add_js($data = NULL, $options = NULL) {
             array('pathPrefix' => empty($prefix) ? '' : $prefix),
           ),
           'type' => 'setting',
-          'scope' => 'footer',
+          'scope' => 'header',
           'group' => JS_LIBRARY,
           'every_page' => TRUE,
           'weight' => 0,
@@ -300,7 +300,7 @@ function aurora_add_js($data = NULL, $options = NULL) {
         'misc/drupal.js' => array(
           'data' => 'misc/drupal.js',
           'type' => 'file',
-          'scope' => 'footer',
+          'scope' => 'header',
           'group' => JS_LIBRARY,
           'every_page' => TRUE,
           'weight' => -1,
@@ -342,7 +342,17 @@ function aurora_add_js($data = NULL, $options = NULL) {
       $javascript[$js_key]['defer'] = FALSE;
     }
     if (empty($js_value['force header'])) {
-      $javascript[$js_key]['force header'] = FALSE;
+      if ($js_key == 'settings' || $js_key == 'misc/drupal.js' || $js_key == 'misc/jquery.js' || $js_key == 'misc/jquery.once.js') {
+        $javascript[$js_key]['force header'] = TRUE;
+      }
+      else {
+        $javascript[$js_key]['force header'] = FALSE;
+      }
+      
+      if ($js_value['scope'] == 'footer') {
+        $javascript[$js_key]['force header'] = FALSE;
+      }
+      
     }
   }
   
@@ -425,27 +435,28 @@ function aurora_group_js($javascript) {
     // of keys in the array doesn't matter, and we don't want a new group if all
     // that's different is that order.
     ksort($item['browsers']);
+    if (!empty($item['type'])) {
+      switch ($item['type']) {
+        case 'file':
+          // Group file items if their 'preprocess' flag is TRUE.
+          // Help ensure maximum reuse of aggregate files by only grouping
+          // together items that share the same 'group' value and 'every_page'
+          // flag. See drupal_add_js() for details about that.
+          $group_keys = $item['preprocess'] ? array($item['type'], $item['group'], $item['every_page'], $item['browsers'], $item['defer'], $item['async']) : FALSE;
+          break;
 
-    switch ($item['type']) {
-      case 'file':
-        // Group file items if their 'preprocess' flag is TRUE.
-        // Help ensure maximum reuse of aggregate files by only grouping
-        // together items that share the same 'group' value and 'every_page'
-        // flag. See drupal_add_js() for details about that.
-        $group_keys = $item['preprocess'] ? array($item['type'], $item['group'], $item['every_page'], $item['browsers'], $item['defer'], $item['async']) : FALSE;
-        break;
-
-      case 'external':
-      case 'setting':
-      case 'inline':
-        // Do not group external, settings, and inline items.
-        $group_keys = FALSE;
-        break;
+        case 'external':
+        case 'setting':
+        case 'inline':
+          // Do not group external, settings, and inline items.
+          $group_keys = FALSE;
+          break;
+      }
     }
 
     // If the group keys don't match the most recent group we're working with,
     // then a new group must be made.
-    if ($group_keys !== $current_group_keys) {
+    if (!empty($group_keys) && $group_keys !== $current_group_keys) {
       $index++;
       // Initialize the new group with the same properties as the first item
       // being placed into it. The item's 'data' and 'weight' properties are
@@ -530,7 +541,7 @@ function aurora_pre_render_scripts($elements) {
     // If a group of files has been aggregated into a single file,
     // $group['data'] contains the URI of the aggregate file. Add a single
     // script element for this file.
-    if ($group['type'] == 'file' && isset($group['data'])) {
+    if (!empty($group['type']) && $group['type'] == 'file' && isset($group['data'])) {
       $element = $element_defaults;
       $element['#attributes']['src'] = file_create_url($group['data']);
       $element['#browsers'] = $group['browsers'];
@@ -549,30 +560,32 @@ function aurora_pre_render_scripts($elements) {
           $element['#attributes']['async'] = 'async';
         }
         $element['#browsers'] = $item['browsers'];
+        
+        if (!empty($item['type'])) {
+          // Element properties that depend on item type.
+          switch ($item['type']) {
+            case 'setting':
+              $element['#value_prefix'] = $embed_prefix;
+              $element['#value'] = 'jQuery.extend(Drupal.settings, ' . drupal_json_encode(drupal_array_merge_deep_array($item['data'])) . ");";
+              $element['#value_suffix'] = $embed_suffix;
+              break;
 
-        // Element properties that depend on item type.
-        switch ($item['type']) {
-          case 'setting':
-            $element['#value_prefix'] = $embed_prefix;
-            $element['#value'] = 'jQuery.extend(Drupal.settings, ' . drupal_json_encode(drupal_array_merge_deep_array($item['data'])) . ");";
-            $element['#value_suffix'] = $embed_suffix;
-            break;
+            case 'inline':
+              $element['#value_prefix'] = $embed_prefix;
+              $element['#value'] = $item['data'];
+              $element['#value_suffix'] = $embed_suffix;
+              break;
 
-          case 'inline':
-            $element['#value_prefix'] = $embed_prefix;
-            $element['#value'] = $item['data'];
-            $element['#value_suffix'] = $embed_suffix;
-            break;
+            case 'file':
+              $query_string = empty($item['version']) ? $default_query_string : $js_version_string . $item['version'];
+              $query_string_separator = (strpos($item['data'], '?') !== FALSE) ? '&' : '?';
+              $element['#attributes']['src'] = file_create_url($item['data']) . $query_string_separator . ($item['cache'] ? $query_string : REQUEST_TIME);
+              break;
 
-          case 'file':
-            $query_string = empty($item['version']) ? $default_query_string : $js_version_string . $item['version'];
-            $query_string_separator = (strpos($item['data'], '?') !== FALSE) ? '&' : '?';
-            $element['#attributes']['src'] = file_create_url($item['data']) . $query_string_separator . ($item['cache'] ? $query_string : REQUEST_TIME);
-            break;
-
-          case 'external':
-            $element['#attributes']['src'] = $item['data'];
-            break;
+            case 'external':
+              $element['#attributes']['src'] = $item['data'];
+              break;
+          }
         }
 
         $elements[] = $element;
