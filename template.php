@@ -124,6 +124,7 @@ function aurora_element_info_alter(&$elements) {
     '#pre_render' => array('aurora_pre_render_scripts'),
     '#group_callback' => 'aurora_group_js',
     '#aggregate_callback' => 'aurora_aggregate_js',
+    '#type' => 'scripts'
   );
 }
 
