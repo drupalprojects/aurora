@@ -58,13 +58,32 @@
        $javascript[$js_key]['scope'] = 'footer';
      }
    }
-
-   // Filter out elements of the given scope.
-   $items = array();
-   foreach ($javascript as $key => $item) {
-     if ($item['scope'] == $scope) {
-       $items[$key] = $item;
-     }
+   
+   // Check to see if Force Header is available and set to true.
+  // If it is neither enabled nor set to true, change scope to footer,
+  // otherwise, keep it in the header.
+  // Done again here because scope may change on alter.
+  foreach ($javascript as $js_key => $js_value) {
+    if (!empty($js_value['force header']) && $js_value['force header']) {
+      $javascript[$js_key]['scope'] = 'header';
+    }
+    else {
+      $javascript[$js_key]['scope'] = 'footer';
+    }
+    
+    if ($js_value['group'] == JS_LIBRARY && theme_get_settings('aurora_libraries_head')) {
+      $javascript[$js_key]['scope'] = 'header';
+    }
+  }
+    
+    
+    
+    // Filter out elements of the given scope.
+    $items = array();
+    foreach ($javascript as $key => $item) {
+      if ($item['scope'] == $scope) {
+        $items[$key] = $item;
+      }
    }
    
    // Sort the JavaScript so that it appears in the correct order.
@@ -342,17 +361,7 @@ function aurora_add_js($data = NULL, $options = NULL) {
       $javascript[$js_key]['defer'] = FALSE;
     }
     if (empty($js_value['force header'])) {
-      if ($js_key == 'settings' || $js_key == 'misc/drupal.js' || $js_key == 'misc/jquery.js' || $js_key == 'misc/jquery.once.js') {
-        $javascript[$js_key]['force header'] = TRUE;
-      }
-      else {
-        $javascript[$js_key]['force header'] = FALSE;
-      }
-      
-      if ($js_value['scope'] == 'footer') {
-        $javascript[$js_key]['force header'] = FALSE;
-      }
-      
+      $javascript[$js_key]['force header'] = FALSE;
     }
   }
   
