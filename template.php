@@ -374,7 +374,14 @@ function aurora_css_alter(&$css) {
   if (isset($css[$color . '/color-rtl.css'])) {
     $css[$color . '/color-rtl.css']['data'] = $dir . '/color/color.admin-rtl.css';
   }
-
+  
+  if (theme_get_setting('aurora_remove_core_css')) {
+    foreach ($css as $key => $value) {
+      if (strpos($key, 'modules/') === 0) {
+        unset($css[$key]);
+      }
+    }
+  }
 }
 
 /**
