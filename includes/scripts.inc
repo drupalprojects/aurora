@@ -71,7 +71,7 @@
       $javascript[$js_key]['scope'] = 'footer';
     }
     
-    if ($js_value['group'] == JS_LIBRARY && theme_get_setting('aurora_libraries_head')) {
+    if (($js_value['group'] == JS_LIBRARY || $js_value['group'] == JS_JQUERY) && theme_get_setting('aurora_libraries_head')) {
       $javascript[$js_key]['scope'] = 'header';
     }
   }
@@ -451,7 +451,7 @@ function aurora_group_js($javascript) {
           // Help ensure maximum reuse of aggregate files by only grouping
           // together items that share the same 'group' value and 'every_page'
           // flag. See drupal_add_js() for details about that.
-          $group_keys = $item['preprocess'] ? array($item['type'], $item['group'], $item['every_page'], $item['browsers'], $item['defer'], $item['async']) : FALSE;
+          $group_keys = $item['preprocess'] ? array($item['group'], $item['type'], $item['every_page'], $item['browsers'], $item['defer'], $item['async']) : FALSE;
           break;
 
         case 'external':
@@ -476,8 +476,14 @@ function aurora_group_js($javascript) {
       $current_group_keys = $group_keys ? $group_keys : NULL;
     }
 
+    $weight = isset($item['weight']) ? $item['weight'] : 0;
+
     // Add the item to the current group.
-    $groups[$index]['items'][] = $item;
+    $groups[$index]['items'][$weight] = $item;
+  }
+
+  foreach ($groups as $index => $items) {
+    ksort($groups[$index]['items']);
   }
 
   return $groups;
@@ -628,7 +634,7 @@ function aurora_aggregate_js(&$js_groups) {
   // update.
   if (variable_get('preprocess_js', FALSE) && (!defined('MAINTENANCE_MODE') || MAINTENANCE_MODE != 'update')) {
     foreach ($js_groups as $key => $group) {
-      if ($group['type'] == 'file' && $group['preprocess']) {
+      if (isset($group['type']) && $group['type'] == 'file' && $group['preprocess']) {
         $js_groups[$key]['data'] = aurora_build_js_cache($group['items']);
       }
     }
@@ -677,6 +683,7 @@ function aurora_build_js_cache($files) {
   if (empty($uri) || !file_exists($uri)) {
     // Build aggregate JS file.
     foreach ($files as $path => $info) {
+      $info['preprocess'] = isset($info['preprocess']) ? $info['preprocess'] : FALSE;
       if ($info['preprocess']) {
         // Append a ';' and a newline after each JS file to prevent them from running together.
         $contents .= file_get_contents($info['data']) . ";\n";

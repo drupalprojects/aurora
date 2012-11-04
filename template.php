@@ -39,8 +39,12 @@
  *   http://drupal.org/project/aurora
  */
 
+// We set a specific group for jquery, so our CDN work actually works.
+define('JS_JQUERY', -10000);
+
 require_once dirname(__FILE__) . '/includes/common.inc';
 require_once dirname(__FILE__) . '/includes/scripts.inc';
+
 
 // Auto-rebuild the theme registry during theme development.
 if (theme_get_setting('aurora_rebuild_registry') && !defined('MAINTENANCE_MODE')) {
@@ -399,8 +403,53 @@ function aurora_preprocess_node(&$variables) {
   * Implements hook_js_alter
   */
 function aurora_js_alter(&$js) {
+  global $base_url;
   // Forces Modernizr to header if the Modernizr module is enabled.
   if (module_exists('modernizr')) {
     $js[modernizr_get_path()]['force header'] = true;
+  }
+
+  // Updates jQuery and loads it from a CDN if wanted.
+  // Partially pulled from jquery_update module.
+  $version = theme_get_setting('aurora_jquery_version');
+  $cdn = theme_get_setting('aurora_jquery_cdn');
+  if ($cdn != 0 && $version == '1.4.4') {
+    return;
+  }
+
+  $path_to_theme = $base_url . '/' . drupal_get_path('theme', 'aurora');
+  $js['misc/jquery.js']['version'] = $version;
+
+  if ($cdn !== '0') {
+    $js['misc/jquery.js']['type'] = 'external';
+    $js['misc/jquery.js']['group'] = JS_JQUERY;
+
+    switch ($cdn) {
+      case 'google':
+        $js['misc/jquery.js']['data'] = "//ajax.googleapis.com/ajax/libs/jquery/$version/jquery.min.js";
+      break;
+      case 'microsoft':
+        $js['misc/jquery.js']['data'] = "http://ajax.aspnetcdn.com/ajax/jquery/jquery-$version.min.js";
+      break;
+      case 'jquery':
+        $js['misc/jquery.js']['data'] = "http://code.jquery.com/jquery-$version.min.js";
+      break;
+    }
+    // Now add code to fall back on if the CDN is unavailable.
+    $js['misc/jquery-fallback.js'] = array(
+      'group' => $js['misc/jquery.js']['group'],
+      'weight' => $js['misc/jquery.js']['weight'] + 2,
+      'every_page' => TRUE,
+      'type' => 'inline',
+      'scope' => $js['misc/jquery.js']['scope'],
+      'cache' => FALSE,
+      'defer' => FALSE,
+      'force header' => $js['misc/jquery.js']['force header'],
+      'data' => 'window.jQuery || document.write(\'<script type="text/javascript" src="' . $path_to_theme . '/js/jquery-' . $version . '.min.js"><\/script>\')'
+    );
+  }
+  else {
+    // If a CDN is not selected, but an updated version still wants to be used.
+    $js['misc/jquery.js']['data'] = "$path_to_theme/js/jquery-$version.min.js";
   }
 }
