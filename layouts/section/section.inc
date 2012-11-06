@@ -396,6 +396,7 @@ function theme_aurora_section($vars) {
       $renderer->base['canvas'],
       'clearfix',
     ),
+    'wrapper' => 'div',
   );
   
   drupal_alter('aurora_layout_attributes', $attributes);
@@ -412,13 +413,14 @@ function theme_aurora_section($vars) {
   }
   
   $id = $attributes['id'];
+  $wrapper = $attributes['wrapper'];
   
-  $output = "<div class='" . $classes . "' " . $id . ">\n";
+  $output = "<" . $wrapper . " class='" . $classes . "' " . $id . ">\n";
 
   $output .= aurora_section_render_items($renderer, $settings['items']['canvas']['children'], $renderer->base['canvas']);
 
   // Wrap the whole thing up nice and snug
-  $output .= "</div>\n";
+  $output .= "</" . $wrapper . ">\n";
 
   return $output;
 }
@@ -568,7 +570,8 @@ function aurora_section_render_item($renderer, $item, $content, $id, $position, 
       'classes' => array(
         $base,
         $base . '-' . $renderer->base_class,
-      )
+      ),
+      'wrapper' => 'aside',
     );
     
     if ($position == 0) {
@@ -596,14 +599,15 @@ function aurora_section_render_item($renderer, $item, $content, $id, $position, 
 
     $id = $attributes['id'];
     
-    $output .= '<aside class="' . $classes . '">';
+    $wrapper = $attributes['wrapper'];
+    
+    $output .= '<' . $wrapper . ' class="' . $classes . '">';
     $output .= "\n";
+    $output .= $content;
+    $output .= '  </' . $wrapper . '>' . "\n";
   }
-  
-  $output .= $content;
-  
-  if ($base == 'panels-section-row') {
-    $output .= '  </aside>' . "\n";
+  else {
+    $output .= $content;
   }
   
   return $output;
