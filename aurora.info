@@ -1,5 +1,5 @@
 name = Aurora
-description = Lightweight Responsive Optimized HTML5 base theme
+description = Lightweight Responsive Ready HTML5 base theme
 core = 7.x
 
 regions[header]         = Header
@@ -11,3 +11,5 @@ regions[sidebar_first]  = Primary Sidebar
 regions[sidebar_second] = Secondary Sidebar
 regions[main_suffix]    = Main Region Suffix
 regions[footer]         = Footer
+
+plugins[panels][layouts] = layouts
