@@ -328,7 +328,6 @@ function aurora_process_html_tag(&$vars) {
  * - #1189816: Convert comment.tpl.php to HTML5.
  */
 function aurora_preprocess_comment(&$variables) {
-  $comment = $variables['comment'];
   $variables['user_picture'] = theme_get_setting('toggle_comment_user_picture') ? theme('user_picture', array('account' => $comment)) : '';
 }
 
@@ -453,4 +452,18 @@ function aurora_js_alter(&$js) {
     // If a CDN is not selected, but an updated version still wants to be used.
     $js['misc/jquery.js']['data'] = "$path_to_theme/js/jquery-$version.min.js";
   }
+}
+
+function aurora_preprocess_panels_pane(&$vars) {
+  $subtype = $vars['pane']->subtype;
+  $layout = $vars['display']->layout;
+  $vars['theme_hook_suggestions'][] = 'panels_pane__' . $layout;
+  $vars['theme_hook_suggestions'][] = 'panels_pane__' . $subtype;
+  $vars['theme_hook_suggestions'][] = 'panels_pane__' . $layout . '__' . $subtype;
+}
+
+function aurora_panels_default_style_render_region($vars) {
+  $output = '';
+  $output .= implode("\n", $vars['panes']);
+  return $output;
 }
