@@ -41,6 +41,7 @@
 
 // We set a specific group for jquery, so our CDN work actually works.
 define('JS_JQUERY', -10000);
+define('JS_DRUPAL', -9000);
 
 require_once dirname(__FILE__) . '/includes/common.inc';
 require_once dirname(__FILE__) . '/includes/scripts.inc';
@@ -419,6 +420,11 @@ function aurora_js_alter(&$js) {
 
   $path_to_theme = $base_url . '/' . drupal_get_path('theme', 'aurora');
   $js['misc/jquery.js']['version'] = $version;
+  $js['misc/jquery.js']['group'] = JS_DRUPAL;
+  
+  $js['misc/jquery.once.js']['group'] = JS_DRUPAL;
+  $js['misc/drupal.js']['group'] = JS_DRUPAL;
+  $js['settings']['group'] = JS_DRUPAL;
 
   if ($cdn !== '0') {
     $js['misc/jquery.js']['type'] = 'external';
