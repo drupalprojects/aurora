@@ -71,7 +71,7 @@
       $javascript[$js_key]['scope'] = 'footer';
     }
     
-    if (($js_value['group'] == JS_LIBRARY || $js_value['group'] == JS_JQUERY) && theme_get_setting('aurora_libraries_head')) {
+    if (($js_value['group'] == JS_LIBRARY || $js_value['group'] == JS_JQUERY || $js_value['group'] == JS_DRUPAL) && theme_get_setting('aurora_libraries_head')) {
       $javascript[$js_key]['scope'] = 'header';
     }
   }
