@@ -41,6 +41,7 @@
 
 // We set a specific group for jquery, so our CDN work actually works.
 define('JS_JQUERY', -10000);
+define('JS_DRUPAL', -9000);
 
 require_once dirname(__FILE__) . '/includes/common.inc';
 require_once dirname(__FILE__) . '/includes/scripts.inc';
@@ -328,7 +329,6 @@ function aurora_process_html_tag(&$vars) {
  * - #1189816: Convert comment.tpl.php to HTML5.
  */
 function aurora_preprocess_comment(&$variables) {
-  $comment = $variables['comment'];
   $variables['user_picture'] = theme_get_setting('toggle_comment_user_picture') ? theme('user_picture', array('account' => $comment)) : '';
 }
 
@@ -421,6 +421,12 @@ function aurora_js_alter(&$js) {
 
   $path_to_theme = $base_url . '/' . drupal_get_path('theme', 'aurora');
   $js['misc/jquery.js']['version'] = $version;
+  $js['misc/jquery.js']['group'] = JS_DRUPAL;
+
+  // Change all the Drupal JavaScript to be in the same group.
+  $js['misc/jquery.once.js']['group'] = JS_DRUPAL;
+  $js['misc/drupal.js']['group'] = JS_DRUPAL;
+  $js['settings']['group'] = JS_DRUPAL;
 
   if ($cdn !== '0') {
     $js['misc/jquery.js']['type'] = 'external';
@@ -455,4 +461,18 @@ function aurora_js_alter(&$js) {
     // If a CDN is not selected, but an updated version still wants to be used.
     $js['misc/jquery.js']['data'] = "$path_to_theme/js/jquery-$version.min.js";
   }
+}
+
+function aurora_preprocess_panels_pane(&$vars) {
+  $subtype = $vars['pane']->subtype;
+  $layout = $vars['display']->layout;
+  $vars['theme_hook_suggestions'][] = 'panels_pane__' . $layout;
+  $vars['theme_hook_suggestions'][] = 'panels_pane__' . $subtype;
+  $vars['theme_hook_suggestions'][] = 'panels_pane__' . $layout . '__' . $subtype;
+}
+
+function aurora_panels_default_style_render_region($vars) {
+  $output = '';
+  $output .= implode("\n", $vars['panes']);
+  return $output;
 }
