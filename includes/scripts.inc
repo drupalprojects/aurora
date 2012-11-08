@@ -51,7 +51,7 @@
    // otherwise, keep it in the header.
    // Done again here because scope may change on alter.
    foreach ($javascript as $js_key => $js_value) {
-     if ($js_value['force header']) {
+     if (!empty($js_value['force header'])) {
        $javascript[$js_key]['scope'] = 'header';
      }
      else {
@@ -433,11 +433,20 @@ function aurora_group_js($javascript) {
   // new group needs to be made for it.
   $current_group_keys = NULL;
   $index = -1;
-  $weight_holder = 0;
+
+  $ordering_array = array();
+
   foreach ($javascript as &$item) {
     $item['browsers'] = isset($item['browsers']) ? $item['browsers'] : array();
     $item['browsers'] += array(
       'IE'
+    );
+
+    // As these are not native in Drupal, we add in the default values.
+    $item += array(
+      'defer' => FALSE,
+      'async' => FALSE,
+      'type' => '',
     );
 
     // The browsers for which the JavaScript item needs to be loaded is part of
@@ -445,59 +454,59 @@ function aurora_group_js($javascript) {
     // of keys in the array doesn't matter, and we don't want a new group if all
     // that's different is that order.
     ksort($item['browsers']);
-    if (!empty($item['type'])) {
+
+    // We are first going to ensure that all the javascript is in the right
+    // order.
+    $group = $item['group'];
+
+    $weight = $item['weight'];
+    // We are chaging the weight of the files, so that ones flagged with
+    // every_page are put first.
+    $weight += $item['every_page'] ? -10000 : 10000;
+    $grouped_items[$group][] = $item;
+    $ordering_array[$group][] = $weight;
+  }
+
+  // This will sort all the groups to ensure we are in the right order.
+  ksort($grouped_items);
+  ksort($ordering_array);
+
+  foreach ($grouped_items as $group => $items) {
+    // Now we go into each group, and sort by the individual weight. This will
+    // also take into effect the every_page tag.
+    array_multisort($ordering_array[$group], SORT_NUMERIC, $items);
+
+    foreach ($items as $item) {
       switch ($item['type']) {
         case 'file':
           // Group file items if their 'preprocess' flag is TRUE.
           // Help ensure maximum reuse of aggregate files by only grouping
           // together items that share the same 'group' value and 'every_page'
           // flag. See drupal_add_js() for details about that.
-          $group_keys = !empty($item['preprocess']) ? array($item['group'], $item['every_page'], $item['browsers'], $item['defer']) : FALSE;
-          break;
+          $group_keys = !empty($item['preprocess']) ? array($item['every_page'], $item['browsers'], $item['defer']) : FALSE;
+        break;
+
         case 'external':
         case 'inline':
         case 'setting':
+        default:
           // Do not group external, settings, and inline items.
           $group_keys = FALSE;
-          break;
+        break;
       }
-    }
 
-    $item['group_keys'] = $group_keys;
-  }
-
-  $sortArray = array();
-
-  foreach ($javascript as $item) {
-    foreach ($item as $key => $value) {
-      if (!isset($sortArray[$key])) {
-          $sortArray[$key] = array();
+      // If the group keys don't match the most recent group we're working with,
+      // then a new group must be made. Also, each inline, external, or setting
+      // script will also be in their own group.
+      if ((!empty($group_keys) && $group_keys !== $current_group_keys) || $group_keys == FALSE) {
+        $index++;
+        // We set the base settings to the first object, for reference later on.
+        $groups[$index] = $item;
+        $current_group_keys = $group_keys;
       }
-      $sortArray[$key][] = $value;
+
+      $groups[$index]['items'][] = $item;
     }
-  }
-
-  array_multisort($sortArray['group_keys'], SORT_DESC, $javascript);
-  $javascript = array_reverse($javascript);
-
-  foreach ($javascript as $item) {
-    $group_keys = $item['group_keys'];
-    // If the group keys don't match the most recent group we're working with,
-    // then a new group must be made.
-    if (!empty($group_keys) && $group_keys !== $current_group_keys) {
-      $index++;
-      $current_group_keys = $group_keys ? $group_keys : NULL;
-    }
-
-    $weight = isset($item['weight']) ? (floor($item['weight'] * (1000000)) + $weight_holder) : $weight_holder;
-    $weight_holder ++;
-
-    // Add the item to the current group.
-    $groups[$index]['items'][$weight] = $item;
-  }
-
-  foreach ($groups as $index => $items) {
-    ksort($groups[$index]['items']);
   }
 
   return $groups;
