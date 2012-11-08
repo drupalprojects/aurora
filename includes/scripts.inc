@@ -45,7 +45,7 @@
    if (!$skip_alter) {
      drupal_alter('js', $javascript);
    }
-   
+
    // Check to see if Force Header is available and set to true.
    // If it is neither enabled nor set to true, change scope to footer,
    // otherwise, keep it in the header.
@@ -58,7 +58,7 @@
        $javascript[$js_key]['scope'] = 'footer';
      }
    }
-   
+
    // Check to see if Force Header is available and set to true.
   // If it is neither enabled nor set to true, change scope to footer,
   // otherwise, keep it in the header.
@@ -70,14 +70,14 @@
     else {
       $javascript[$js_key]['scope'] = 'footer';
     }
-    
+
     if (($js_value['group'] == JS_LIBRARY || $js_value['group'] == JS_JQUERY || $js_value['group'] == JS_DRUPAL) && theme_get_setting('aurora_libraries_head')) {
       $javascript[$js_key]['scope'] = 'header';
     }
   }
-    
-    
-    
+
+
+
     // Filter out elements of the given scope.
     $items = array();
     foreach ($javascript as $key => $item) {
@@ -85,7 +85,7 @@
         $items[$key] = $item;
       }
    }
-   
+
    // Sort the JavaScript so that it appears in the correct order.
    uasort($items, 'aurora_sort_css_js');
 
@@ -275,7 +275,7 @@
  * @see aurora_get_js()
  */
 function aurora_add_js($data = NULL, $options = NULL) {
-  
+
   $javascript = &drupal_static('drupal_add_js', array());
 
   // Construct the options, taking the defaults into consideration.
@@ -288,14 +288,14 @@ function aurora_add_js($data = NULL, $options = NULL) {
     $options = array();
   }
   $options += aurora_js_defaults($data);
-  
+
   // Preprocess can only be set if caching is enabled.
   $options['preprocess'] = $options['cache'] ? $options['preprocess'] : FALSE;
-  
+
   // Tweak the weight so that files of the same weight are included in the
   // order of the calls to aurora_add_js().
   $options['weight'] += count($javascript) / 1000;
-  
+
   if (isset($data)) {
     // Add jquery.js and drupal.js, as well as the basePath setting, the
     // first time a JavaScript file is added.
@@ -350,7 +350,7 @@ function aurora_add_js($data = NULL, $options = NULL) {
         $javascript[$options['data']] = $options;
     }
   }
-  
+
   // Update JavaScript files to include async, defer, and force header options
   // if they don't already have them.
   foreach ($javascript as $js_key => $js_value) {
@@ -364,7 +364,7 @@ function aurora_add_js($data = NULL, $options = NULL) {
       $javascript[$js_key]['force header'] = FALSE;
     }
   }
-  
+
   return $javascript;
 }
 
@@ -433,7 +433,8 @@ function aurora_group_js($javascript) {
   // new group needs to be made for it.
   $current_group_keys = NULL;
   $index = -1;
-  foreach ($javascript as $item) {
+  $weight_holder = 0;
+  foreach ($javascript as &$item) {
     $item['browsers'] = isset($item['browsers']) ? $item['browsers'] : array();
     $item['browsers'] += array(
       'IE'
@@ -451,32 +452,45 @@ function aurora_group_js($javascript) {
           // Help ensure maximum reuse of aggregate files by only grouping
           // together items that share the same 'group' value and 'every_page'
           // flag. See drupal_add_js() for details about that.
-          $group_keys = $item['preprocess'] ? array($item['group'], $item['type'], $item['every_page'], $item['browsers'], $item['defer'], $item['async']) : FALSE;
+          $group_keys = !empty($item['preprocess']) ? array($item['group'], $item['every_page'], $item['browsers'], $item['defer']) : FALSE;
           break;
-
         case 'external':
-        case 'setting':
         case 'inline':
+        case 'setting':
           // Do not group external, settings, and inline items.
           $group_keys = FALSE;
           break;
       }
     }
 
+    $item['group_keys'] = $group_keys;
+  }
+
+  $sortArray = array();
+
+  foreach ($javascript as $item) {
+    foreach ($item as $key => $value) {
+      if (!isset($sortArray[$key])) {
+          $sortArray[$key] = array();
+      }
+      $sortArray[$key][] = $value;
+    }
+  }
+
+  array_multisort($sortArray['group_keys'], SORT_DESC, $javascript);
+  $javascript = array_reverse($javascript);
+
+  foreach ($javascript as $item) {
+    $group_keys = $item['group_keys'];
     // If the group keys don't match the most recent group we're working with,
     // then a new group must be made.
     if (!empty($group_keys) && $group_keys !== $current_group_keys) {
       $index++;
-      // Initialize the new group with the same properties as the first item
-      // being placed into it. The item's 'data' and 'weight' properties are
-      // unique to the item and should not be carried over to the group.
-      $groups[$index] = $item;
-      unset($groups[$index]['data'], $groups[$index]['weight']);
-      $groups[$index]['items'] = array();
       $current_group_keys = $group_keys ? $group_keys : NULL;
     }
 
-    $weight = isset($item['weight']) ? $item['weight'] : 0;
+    $weight = isset($item['weight']) ? (floor($item['weight'] * (1000000)) + $weight_holder) : $weight_holder;
+    $weight_holder ++;
 
     // Add the item to the current group.
     $groups[$index]['items'][$weight] = $item;
@@ -514,7 +528,7 @@ function aurora_group_js($javascript) {
  * @see drupal_get_js()
  */
 function aurora_pre_render_scripts($elements) {
-  
+
   // Group and aggregate the items.
   if (isset($elements['#group_callback'])) {
     $elements['#groups'] = $elements['#group_callback']($elements['#items']);
@@ -575,7 +589,7 @@ function aurora_pre_render_scripts($elements) {
           $element['#attributes']['async'] = 'async';
         }
         $element['#browsers'] = $item['browsers'];
-        
+
         if (!empty($item['type'])) {
           // Element properties that depend on item type.
           switch ($item['type']) {
@@ -607,7 +621,6 @@ function aurora_pre_render_scripts($elements) {
       }
     }
   }
-
   return $elements;
 }
 
