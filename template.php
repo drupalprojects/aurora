@@ -425,11 +425,11 @@ function aurora_js_alter(&$js) {
   $js['misc/jquery.once.js']['group'] = JS_DRUPAL;
   $js['misc/drupal.js']['group'] = JS_DRUPAL;
   $js['settings']['group'] = JS_DRUPAL;
-
+  
   if ($cdn !== '0') {
     $js['misc/jquery.js']['type'] = 'external';
     $js['misc/jquery.js']['group'] = JS_JQUERY;
-
+    
     switch ($cdn) {
       case 'google':
         $js['misc/jquery.js']['data'] = "//ajax.googleapis.com/ajax/libs/jquery/$version/jquery.min.js";
