@@ -414,7 +414,8 @@ function aurora_js_alter(&$js) {
   // Partially pulled from jquery_update module.
   $version = theme_get_setting('aurora_jquery_version');
   $cdn = theme_get_setting('aurora_jquery_cdn');
-  if ($cdn != 0 && $version == '1.4.4') {
+  if ($cdn === 0 && $version == '1.4.4') {
+    // There is no CDN selected, and the jQuery version has not been changed.
     return;
   }
 
@@ -424,6 +425,7 @@ function aurora_js_alter(&$js) {
   if ($cdn !== '0') {
     $js['misc/jquery.js']['type'] = 'external';
     $js['misc/jquery.js']['group'] = JS_JQUERY;
+    $fallback_url = ($version == '1.4.4') ? $base_url . '/' . $js['misc/jquery.js']['data'] . '?v=1.4.4' : $path_to_theme . '/js/jquery-' . $version . '.min.js';
 
     switch ($cdn) {
       case 'google':
@@ -446,7 +448,7 @@ function aurora_js_alter(&$js) {
       'cache' => FALSE,
       'defer' => FALSE,
       'force header' => $js['misc/jquery.js']['force header'],
-      'data' => 'window.jQuery || document.write(\'<script type="text/javascript" src="' . $path_to_theme . '/js/jquery-' . $version . '.min.js"><\/script>\')'
+      'data' => 'window.jQuery || document.write(\'<script type="text/javascript" src="' . $fallback_url . '"><\/script>\')'
     );
   }
   else {
