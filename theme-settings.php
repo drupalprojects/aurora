@@ -14,7 +14,7 @@ function aurora_form_system_theme_settings_alter(&$form, &$form_state, $form_id 
    return;
   }
   drupal_add_css(drupal_get_path('theme', 'aurora') . '/css/settings.css');
-  
+
   //////////////////////////////
   // Chrome Frame
   //////////////////////////////
@@ -38,9 +38,9 @@ function aurora_form_system_theme_settings_alter(&$form, &$form_state, $form_id 
       'wrapper' => 'cf-settings',
       'method' => 'replace'
     ),
-    
+
    );
- 
+
   $form['chromeframe']['aurora_min_ie_support'] = array(
     '#type' => 'select',
     '#title' => t('Minimum supported Internet Explorer version'),
@@ -64,7 +64,7 @@ function aurora_form_system_theme_settings_alter(&$form, &$form_state, $form_id 
    if ($form_state['rebuild']) {
      if ($form_state['triggering_element']['#name'] == 'aurora_enable_chrome_frame') {
        if ($form_state['triggering_element']['#value'] == 1) {
-       
+
          $form['chromeframe']['aurora_min_ie_support']['#disabled'] = false;
        }
        else {
@@ -79,7 +79,7 @@ function aurora_form_system_theme_settings_alter(&$form, &$form_state, $form_id 
   else {
    $form['chromeframe']['aurora_min_ie_support']['#disabled'] = true;
   }
-  
+
   //////////////////////////////
   // Optimizations
   //////////////////////////////
@@ -92,7 +92,7 @@ function aurora_form_system_theme_settings_alter(&$form, &$form_state, $form_id 
    '#attributes' => array('class' => array('aurora-row-right')),
    '#suffix' => '</span>',
   );
-  
+
   $form['misc']['aurora_remove_core_css'] = array(
     '#type' => 'checkbox',
     '#title' => t('Remove Core CSS'),
@@ -102,7 +102,7 @@ function aurora_form_system_theme_settings_alter(&$form, &$form_state, $form_id 
     ),
     '#description' => t('Removes all Core provided CSS files.'),
   );
-  
+
   $form['misc']['aurora_html_tags'] = array(
     '#type' => 'checkbox',
     '#title' => t('Prune HTML Tags'),
@@ -123,7 +123,7 @@ function aurora_form_system_theme_settings_alter(&$form, &$form_state, $form_id 
     '#weight' => -98,
     '#description' => t('A pile of JavaScript options for you to use and abuse. <div class="messages warning"><strong>WARNING:</strong> Some of these options may wind up breaking existing JavaScript. Use with caution.</div>'),
   );
-  
+
   $form['javascript']['aurora_footer_js'] = array(
     '#type' => 'checkbox',
     '#title' => t('Move JavaScript to the Bottom'),
@@ -138,7 +138,7 @@ function aurora_form_system_theme_settings_alter(&$form, &$form_state, $form_id 
       'method' => 'replace'
     ),
   );
-  
+
   $form['javascript']['aurora_libraries_head'] = array(
     '#type' => 'checkbox',
     '#title' => t('Keep Libraries in the Head'),
@@ -203,18 +203,18 @@ function aurora_form_system_theme_settings_alter(&$form, &$form_state, $form_id 
   else {
    $form['javascript']['aurora_libraries_head']['#disabled'] = true;
   }
-  
+
   //////////////////////////////
   // Development
   //////////////////////////////
-  
+
   $form['development'] = array(
     '#type' => 'fieldset',
     '#title' => t('Development'),
     '#description' => t('Theme like you\'ve never themed before! <div class="messages warning"><strong>WARNING:</strong> These options incur huge performance penalties and <em>must</em> be turned off on production websites.</div>'),
     '#weight' => 52
   );
-  
+
   $form['development']['aurora_rebuild_registry'] = array(
     '#type' => 'checkbox',
     '#title' => t('Rebuild Theme Registry on Reload'),
@@ -225,13 +225,13 @@ function aurora_form_system_theme_settings_alter(&$form, &$form_state, $form_id 
     '#description' => t('<a href="!link" target="_blank">Rebuild the theme registry</a> during project development.', array('!link' => 'http://drupal.org/node/173880#theme-registry')),
   );
 
-  $form['development']['aurora_jquery_min'] = array(
-    '#type' => 'checkbox',
-    '#title' => t('Use uncompressed jQuery'),
-    '#default_value' => theme_get_setting('aurora_jquery_min'),
-    '#description' => t('If you are loading your jQuery from a CDN, selecting this will use the uncompressed version of jQuery. Do not use on production sites.'),
-  );
-  
+  // $form['development']['aurora_uncompressed_jquery'] = array(
+  //   '#type' => 'checkbox',
+  //   '#title' => t('Use uncompressed jQuery'),
+  //   '#default_value' => theme_get_setting('aurora_uncompressed_jquery'),
+  //   '#description' => t('If you are loading your jQuery from a CDN, selecting this will use the uncompressed version of jQuery. Do not use on production sites.'),
+  // );
+
   $form['development']['aurora_livereload'] = array(
     '#type' => 'checkbox',
     '#title' => t('Enable LiveReload'),
@@ -242,7 +242,7 @@ function aurora_form_system_theme_settings_alter(&$form, &$form_state, $form_id 
     '#description' => t('Enable <a href="!link" target="_blank">LiveReload</a> to refresh your browser without you needing to. Awesome for designing in browser.', array('!link' => 'http://livereload.com/')),
     '#weight' => 200,
   );
-  
+
   $form['development']['aurora_viewport_width'] = array(
     '#type' => 'checkbox',
     '#title' => t('Enable Viewport Width Indicator'),
@@ -253,7 +253,7 @@ function aurora_form_system_theme_settings_alter(&$form, &$form_state, $form_id 
     '#description' => t('Displays an indicator of the viewport. Tap/click to toggle between <em>em</em> and <em>px</em>/'),
     '#weight' => 225,
   );
-  
+
   $form['development']['aurora_modernizr_debug'] = array(
     '#type' => 'checkbox',
     '#title' => t('Enable Modernizr Indicator'),
@@ -264,7 +264,27 @@ function aurora_form_system_theme_settings_alter(&$form, &$form_state, $form_id 
     '#description' => t('Displays an indicator of <a href="!link" target="_blank">Modernizr</a> detected features. Tap/click to toggle display of all of the available features.', array('!link' => 'http://modernizr.com/')),
     '#weight' => 250,
   );
-  
+
+  //////////////////////////////
+  // Experimental Options
+  //////////////////////////////
+  $form['experimental'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Experimental'),
+    '#description' => t('You like bleeding? We\'ve got your bleeding edge! <div class="messages warning"><strong>WARNING:</strong> Abandon hope all ye who enter here! These options are <em>very</em> experimental and may break things, use with caution.</div>'),
+    '#weight' => 53
+  );
+
+  $form['experimental']['aurora_custom_js_handling'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Use Experimental JavaScript Handling'),
+    '#default_value' => theme_get_setting('aurora_custom_js_handling'),
+    '#ajax' => array(
+      'callback' => 'aurora_ajax_settings_save'
+    ),
+    '#description' => t('Enable experimental JavaScript handling, including defer, async, and browser specific JavaScript.'),
+  );
+
   //////////////////////////////
   // Theme Settings Update
   //////////////////////////////
@@ -275,7 +295,7 @@ function aurora_form_system_theme_settings_alter(&$form, &$form_state, $form_id 
     '#title' => t('Show Breadcrumbs'),
     '#default_value' => theme_get_setting('toggle_breadcrumbs'),
   );
-  
+
   $form['theme_settings']['toggle_logo']['#ajax'] = array('callback' => 'aurora_ajax_settings_save');
   $form['theme_settings']['toggle_name']['#ajax'] = array('callback' => 'aurora_ajax_settings_save');
   $form['theme_settings']['toggle_slogan']['#ajax'] = array('callback' => 'aurora_ajax_settings_save');
@@ -284,7 +304,7 @@ function aurora_form_system_theme_settings_alter(&$form, &$form_state, $form_id 
   $form['theme_settings']['toggle_comment_user_verification']['#ajax'] = array('callback' => 'aurora_ajax_settings_save');
   $form['theme_settings']['toggle_favicon']['#ajax'] = array('callback' => 'aurora_ajax_settings_save');
   $form['theme_settings']['toggle_breadcrumbs']['#ajax'] = array('callback' => 'aurora_ajax_settings_save');
-  
+
   //////////////////////////////
   // Logo and Favicon
   //////////////////////////////
@@ -292,7 +312,7 @@ function aurora_form_system_theme_settings_alter(&$form, &$form_state, $form_id 
   $form['logo']['#attributes']['class'][] = 'aurora-row-left';
   $form['logo']['#prefix'] = '<span class="aurora-settigns-row">';
   $form['logo']['default_logo']['#ajax'] = array('callback' => 'aurora_ajax_settings_save');
-  
+
   $form['favicon']['#weight'] = 11;
   $form['favicon']['#attributes']['class'][] = 'aurora-row-right';
   $form['favicon']['#suffix'] = '</span>';
@@ -302,7 +322,7 @@ function aurora_form_system_theme_settings_alter(&$form, &$form_state, $form_id 
 function aurora_chromeframe_options($form, $form_state) {
   $theme = $form_state['build_info']['args'][0];
   $theme_settings = variable_get('theme_' . $theme . '_settings', array());
-  
+
   $theme_settings['aurora_enable_chrome_frame'] = $form_state['input']['aurora_enable_chrome_frame'];
   variable_set('theme_' . $theme . '_settings', $theme_settings);
 
@@ -320,7 +340,7 @@ function aurora_chromeframe_options($form, $form_state) {
 function aurora_js_footer($form, $form_state) {
   $theme = $form_state['build_info']['args'][0];
   $theme_settings = variable_get('theme_' . $theme . '_settings', array());
-  
+
   $theme_settings['aurora_footer_js'] = $form_state['input']['aurora_footer_js'];
   variable_set('theme_' . $theme . '_settings', $theme_settings);
 
@@ -339,9 +359,9 @@ function aurora_ajax_settings_save($form, $form_state) {
   $theme = $form_state['build_info']['args'][0];
   $theme_settings = variable_get('theme_' . $theme . '_settings', array());
   $trigger = $form_state['triggering_element'] ['#name'];
-  
+
   $theme_settings[$trigger] = $form_state['input'][$trigger];
-  
+
   if (empty($theme_settings[$trigger])) {
     $theme_settings[$trigger] = 0;
   }

@@ -25,14 +25,14 @@
  *     /         \  |         **00000**
  *   __|__________\/            ***   **
  *  /  |                         *      *
- * |    \                    
- * |      \__                
+ * |    \
+ * |      \__
  *  \
  *   \__
  *
  * The Aurora theme is a base theme designed to be easily extended by sub
  * themes. You should not modify this or any other file in the Aurora theme
- * folder. Instead, you should create a sub-theme and make your changes there.  
+ * folder. Instead, you should create a sub-theme and make your changes there.
  * In fact, if you're reading this, you may already off on the wrong foot.
  *
  * See the project page for more information:
@@ -62,7 +62,7 @@ if (theme_get_setting('aurora_rebuild_registry') && !defined('MAINTENANCE_MODE')
 /**
   * Implements hook_theme_registry_alter
   */
-function aurora_theme_registry_alter(&$registry) {  
+function aurora_theme_registry_alter(&$registry) {
   // Override template_process_html() in order to add support for all of the Awesome.
   // Again, huge, amazing ups to the wizard Sebastian Siemssen (fubhy) for showing me how to do this.
   if (($index = array_search('template_process_html', $registry['html']['process functions'], TRUE)) !== FALSE) {
@@ -91,7 +91,7 @@ function aurora_process_maintenance_page(&$vars, $hook) {
 
 /**
   * Overrides template_process_html() in order to provide support for awesome new stuffzors!
-  * 
+  *
   * Huge, amazing ups to the wizard Sebastian Siemssen (fubhy) for showing me how to do this.
   */
 function aurora_template_process_html_override(&$variables) {
@@ -100,12 +100,20 @@ function aurora_template_process_html_override(&$variables) {
   $variables['page_bottom'] = drupal_render($variables['page']['page_bottom']);
   // Place the rendered HTML for the page body into a top level variable.
   $variables['page'] = $variables['page']['#children'];
-  $variables['page_bottom'] .= aurora_get_js('footer');
+
 
   $variables['head'] = drupal_get_html_head();
   $variables['css'] = drupal_add_css();
   $variables['styles']  = drupal_get_css();
-  $variables['scripts'] = aurora_get_js('header');
+
+  if (theme_get_setting('aurora_custom_js_handling')) {
+    $variables['page_bottom'] .= aurora_get_js('footer');
+    $variables['scripts'] = aurora_get_js('header');
+  }
+  else {
+    $variables['page_bottom'] .= aurora_get_js_old('footer');
+    $variables['scripts'] = aurora_get_js_old('header');
+  }
 }
 
 function aurora_template_process_maintenance_page_override(&$vars) {
@@ -150,7 +158,7 @@ function aurora_preprocess_html(&$vars) {
     ),
   );
   drupal_add_html_head($viewport, 'viewport');
-  
+
   if (theme_get_setting('aurora_enable_chrome_frame')) {
     // Force IE to use most up-to-date render engine.
     $xua = array(
@@ -161,14 +169,14 @@ function aurora_preprocess_html(&$vars) {
       ),
     );
     drupal_add_html_head($xua, 'x-ua-compatible');
-    
+
     // Chrome Frome
     $chromeframe['wrapper'] = '<!--[if lt IE ' . theme_get_setting('aurora_min_ie_support') . ' ]>';
-    
+
     // Chrome Frame
     $chromeframe['redirect'] = 'http://browsehappy.com/';
     $chromeframe['url'] = 'http://www.google.com/chromeframe/?redirect=true';
-    
+
     $chromeframe['include']['element'] = array(
       '#tag' => 'script',
       '#attributes' => array(
@@ -183,7 +191,7 @@ function aurora_preprocess_html(&$vars) {
 
     $vars['chromeframe_array'] = $chromeframe;
   }
-  
+
   //////////////////////////////
   // HTML5 Base Theme Forwardport
   //
@@ -207,14 +215,14 @@ function aurora_preprocess_html(&$vars) {
       $vars['html_attributes_array']['prefix'][] = $prefix . ': ' . $uri . "\n";
     }
   }
-  
+
   //////////////////////////////
   // LiveReload Integration
   //////////////////////////////
   if (theme_get_setting('aurora_livereload')) {
     drupal_add_js("document.write('<script src=\"http://' + (location.host || 'localhost').split(':')[0] + ':35729/livereload.js?snipver=1\"></' + 'script>')", array('type' => 'inline', 'scope' => 'footer', 'weight' => 9999));
   }
-  
+
   //////////////////////////////
   // RWD Debug Integration
   //////////////////////////////
@@ -222,7 +230,7 @@ function aurora_preprocess_html(&$vars) {
     drupal_add_css(drupal_get_path('theme', 'aurora') . '/css/debug.css');
     drupal_add_js(drupal_get_path('theme', 'aurora') . '/js/debug.js');
   }
-  
+
 }
 
 /**
@@ -235,9 +243,9 @@ function aurora_process_html(&$vars) {
   if (theme_get_setting('aurora_enable_chrome_frame')) {
     $cf_array = $vars['chromeframe_array'];
     $cf = $cf_array['wrapper'] . theme_html_tag($cf_array['include']) . theme_html_tag($cf_array['launch']) . '<![endif]-->';
-    
+
     $cf_link = $cf_array['wrapper'] . '<p class="chromeframe">' . t('You are using an outdated browser! !upgrade or !install to better experience this site.', array('!upgrade' => l(t('Upgrade your browser today'), $cf_array['redirect']), '!install' => l(t('install Google Chrome Frame'), $cf_array['url']))) . '<![endif]-->';
-    
+
     if (!empty($vars['page_top'])) {
       $vars['page_top'] .= $cf_link;
     }
@@ -245,23 +253,23 @@ function aurora_process_html(&$vars) {
       $vars['page_top'] = $cf_link;
     }
   }
-  
+
   //////////////////////////////
   // RWD Debug Integration
   //////////////////////////////
   if (theme_get_setting('aurora_viewport_width') || theme_get_setting('aurora_modernizr_debug')) {
-    
+
     $debug_output = '<div id="aurora-debug">';
-    
+
     if (theme_get_setting('aurora_viewport_width')) {
       $debug_output .= '<div id="aurora-viewport-width"></div>';
     }
     if (theme_get_setting('aurora_modernizr_debug')) {
       $debug_output .= '<div id="aurora-modernizr-debug" class="open"></div>';
     }
-    
+
     $debug_output .= '</div>';
-    
+
     if (!empty($vars['page_bottom'])) {
       $vars['page_bottom'] .= $debug_output;
     }
@@ -269,7 +277,7 @@ function aurora_process_html(&$vars) {
       $vars['page_bottom'] = $debug_output;
     }
   }
-  
+
   //////////////////////////////
   // HTML5 Base Theme Forwardport
   //
@@ -379,7 +387,7 @@ function aurora_css_alter(&$css) {
   if (isset($css[$color . '/color-rtl.css'])) {
     $css[$color . '/color-rtl.css']['data'] = $dir . '/color/color.admin-rtl.css';
   }
-  
+
   if (theme_get_setting('aurora_remove_core_css')) {
     foreach ($css as $key => $value) {
       if (strpos($key, 'modules/') === 0) {
@@ -453,7 +461,7 @@ function aurora_js_alter(&$js) {
       'scope' => $js['misc/jquery.js']['scope'],
       'cache' => FALSE,
       'defer' => FALSE,
-      'force header' => $js['misc/jquery.js']['force header'],
+      'force header' => !empty($js['misc/jquery.js']['force header']) ? $js['misc/jquery.js']['force header'] : FALSE,
       'data' => 'window.jQuery || document.write(\'<script type="text/javascript" src="' . $fallback_url . '"><\/script>\')'
     );
   }
