@@ -422,7 +422,7 @@ function aurora_js_alter(&$js) {
   // Partially pulled from jquery_update module.
   $version = theme_get_setting('aurora_jquery_version');
   $cdn = theme_get_setting('aurora_jquery_cdn');
-  if ($cdn === 0 && $version == '1.4.4') {
+  if ($cdn == FALSE && $version == '1.4.4') {
     // There is no CDN selected, and the jQuery version has not been changed.
     return;
   }
