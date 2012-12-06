@@ -106,13 +106,20 @@ function aurora_template_process_html_override(&$variables) {
   $variables['css'] = drupal_add_css();
   $variables['styles']  = drupal_get_css();
 
+  // Custom Insane JavaScript Handling
   if (theme_get_setting('aurora_custom_js_handling')) {
     $variables['page_bottom'] .= aurora_get_js('footer');
     $variables['scripts'] = aurora_get_js('header');
   }
-  else {
+  // Custom Normal JavaScript Handling
+  else if (theme_get_setting('aurora_footer_js')) {
     $variables['page_bottom'] .= aurora_get_js_old('footer');
     $variables['scripts'] = aurora_get_js_old('header');
+  }
+  // Normal JavaScript Handling
+  else {
+    $variables['page_bottom'] .= drupal_get_js('footer');
+    $variables['scripts'] = drupal_get_js('header');
   }
 }
 
