@@ -81,7 +81,7 @@ function aurora_form_system_theme_settings_alter(&$form, &$form_state, $form_id 
   }
 
   //////////////////////////////
-  // Optimizations
+  // Miscelaneous
   //////////////////////////////
 
   $form['misc'] = array(
@@ -111,6 +111,18 @@ function aurora_form_system_theme_settings_alter(&$form, &$form_state, $form_id 
       'callback' => 'aurora_ajax_settings_save'
     ),
     '#description' => t('Prunes your <pre>style</pre>, <pre>link</pre>, and <pre>script</pre> tags as <a href="!link" target="_blank"> suggested by Nathan Smith</a>.', array('!link' => 'http://sonspring.com/journal/html5-in-drupal-7#_pruning')),
+  );
+
+  $form['misc']['aurora_typekit_id'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Typekit ID'),
+    '#default_value' => theme_get_setting('aurora_typekit_id'),
+    '#size' => 7,
+    '#maxlength' => 7,
+    '#ajax' => array(
+      'callback' => 'aurora_ajax_settings_save'
+    ),
+    '#description' => t('If you are using <a href="!link" target="_blank">Typekit</a> to serve webfonts, put your Typekit Kit ID here', array('!link' => 'https://typekit.com/')),
   );
 
 
