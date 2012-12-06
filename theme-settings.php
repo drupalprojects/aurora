@@ -115,7 +115,7 @@ function aurora_form_system_theme_settings_alter(&$form, &$form_state, $form_id 
 
   $form['misc']['aurora_typekit_id'] = array(
     '#type' => 'textfield',
-    '#title' => t('Typekit ID'),
+    '#title' => t('Typekit Kit ID'),
     '#default_value' => theme_get_setting('aurora_typekit_id'),
     '#size' => 7,
     '#maxlength' => 7,
