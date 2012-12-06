@@ -18,7 +18,7 @@
     height: 0;
     overflow: hidden;
   }
-  
+
   &:after {
     clear: both;
   }
@@ -38,9 +38,9 @@ $breakpoint-to-ems: true;
 //////////////////////////////
 .form-item {
   display: block;
-  
+
   &.form-disabled {
-    display: none;    
+    display: none;
   }
 }
 
@@ -78,12 +78,12 @@ input {
       width: .5 * gutter(6);
       border-right: $drupal-default-border;
     }
-  }  
+  }
 }
 
 .aurora-row-right {
   margin-bottom: 0;
-  
+
   @include breakpoint($row-one-to-two) {
     @include reset-columns;
     @include span-columns(6 omega);
@@ -104,7 +104,7 @@ input {
 
 #edit-theme-settings {
   clear: both;
-  
+
   margin-bottom: 0;
   @include breakpoint($row-one-to-two) {
     margin-bottom: 1em;
@@ -113,11 +113,19 @@ input {
 
 .aurora-settigns-row {
   @extend %clearfix-legacy;
-  
+
   display: block;
   padding: 0;
-  
+
   @include breakpoint($row-one-to-two) {
     border: $drupal-default-border;
   }
+}
+
+label[for="edit-aurora-typekit-id"] {
+  display: inline;
+}
+
+#edit-aurora-typekit-id {
+  margin-left: .15em;
 }
