@@ -469,6 +469,15 @@ function aurora_js_alter(&$js) {
     // If a CDN is not selected, but an updated version still wants to be used.
     $js['misc/jquery.js']['data'] = "$path_to_theme/js/jquery-$version.min.js";
   }
+
+  // Finally, if we are replacing these jQuery files, there are secondary
+  // plugins we must also update.
+
+  if (isset($js['misc/jquery.form.js'])) {
+    // Replace jQuery Form plugin.
+    $js['misc/jquery.form.js']['data'] = "$path_to_theme/js/jquery.form.js";
+    $js['misc/jquery.form.js']['version'] = '2.67';
+  }
 }
 
 function aurora_preprocess_panels_pane(&$vars) {
