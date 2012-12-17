@@ -47,19 +47,6 @@ function aurora_get_js_old($scope = 'header', $javascript = NULL, $skip_alter = 
   }
 
   // Check to see if Force Header is available and set to true.
-   // If it is neither enabled nor set to true, change scope to footer,
-   // otherwise, keep it in the header.
-   // Done again here because scope may change on alter.
-   foreach ($javascript as $js_key => $js_value) {
-     if (!empty($js_value['force header'])) {
-       $javascript[$js_key]['scope'] = 'header';
-     }
-     else {
-       $javascript[$js_key]['scope'] = 'footer';
-     }
-   }
-
-   // Check to see if Force Header is available and set to true.
   // If it is neither enabled nor set to true, change scope to footer,
   // otherwise, keep it in the header.
   // Done again here because scope may change on alter.

@@ -106,13 +106,20 @@ function aurora_template_process_html_override(&$variables) {
   $variables['css'] = drupal_add_css();
   $variables['styles']  = drupal_get_css();
 
+  // Custom Insane JavaScript Handling
   if (theme_get_setting('aurora_custom_js_handling')) {
     $variables['page_bottom'] .= aurora_get_js('footer');
     $variables['scripts'] = aurora_get_js('header');
   }
-  else {
+  // Custom Normal JavaScript Handling
+  else if (theme_get_setting('aurora_footer_js')) {
     $variables['page_bottom'] .= aurora_get_js_old('footer');
     $variables['scripts'] = aurora_get_js_old('header');
+  }
+  // Normal JavaScript Handling
+  else {
+    $variables['page_bottom'] .= drupal_get_js('footer');
+    $variables['scripts'] = drupal_get_js('header');
   }
 }
 
@@ -214,6 +221,13 @@ function aurora_preprocess_html(&$vars) {
     foreach (rdf_get_namespaces() as $prefix => $uri) {
       $vars['html_attributes_array']['prefix'][] = $prefix . ': ' . $uri . "\n";
     }
+  }
+
+  //////////////////////////////
+  // Adds Typekit Kit
+  //////////////////////////////
+  if (theme_get_setting('aurora_typekit_id')) {
+    drupal_add_js('(function(){var e={kitId:"' . theme_get_setting('aurora_typekit_id') . '",scriptTimeout:3e3},t=document.getElementsByTagName("html")[0];t.className+=" wf-loading";var n=setTimeout(function(){t.className=t.className.replace(/(\s|^)wf-loading(\s|$)/g," "),t.className+=" wf-inactive"},e.scriptTimeout),r=document.createElement("script"),i=!1;r.src="//use.typekit.net/"+e.kitId+".js",r.type="text/javascript",r.async="true",r.onload=r.onreadystatechange=function(){var t=this.readyState;if(i||t&&t!="complete"&&t!="loaded")return;i=!0,clearTimeout(n);try{Typekit.load(e)}catch(r){}};var s=document.getElementsByTagName("script")[0];s.parentNode.insertBefore(r,s)})()', array('type' => 'inline', 'force header' => true));
   }
 
   //////////////////////////////
@@ -337,6 +351,7 @@ function aurora_process_html_tag(&$vars) {
  * - #1189816: Convert comment.tpl.php to HTML5.
  */
 function aurora_preprocess_comment(&$variables) {
+  $comment = $variables['elements']['#comment'];
   $variables['user_picture'] = theme_get_setting('toggle_comment_user_picture') ? theme('user_picture', array('account' => $comment)) : '';
 }
 
