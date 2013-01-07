@@ -163,39 +163,6 @@ function aurora_form_system_theme_settings_alter(&$form, &$form_state, $form_id 
     '#description' => t('If you have JavaScript inline in the body of your document, such as if you are displaying ads, you may need to keep Drupal JS Libraries in the head instead of moving them to the footer. This will keep Drupal libraries in the head while moving all other JavaScript to the footer.'),
   );
 
-  $form['javascript']['aurora_jquery_cdn'] = array(
-    '#type' => 'select',
-    '#title' => t('Primary jQuery Source'),
-    '#default_value' => theme_get_setting('aurora_jquery_cdn'),
-    '#ajax' => array(
-      'callback' => 'aurora_ajax_settings_save'
-    ),
-    '#options' => array(
-      0 => t('Use local files'),
-      'google' => t('Google CDN'),
-      'microsoft' => t('Microsoft CDN'),
-      'jquery' => t('jQuery CDN'),
-    ),
-    '#description' => t('Will load the jQuery file from a select Content Delivery Network with a local fallback.'),
-  );
-
-  $form['javascript']['aurora_jquery_version'] = array(
-    '#type' => 'select',
-    '#title' => t('Update jQuery Version'),
-    '#default_value' => theme_get_setting('aurora_jquery_version'),
-    '#ajax' => array(
-      'callback' => 'aurora_ajax_settings_save'
-    ),
-    '#options' => array(
-      '1.4.4' => t('Do not update'),
-      '1.8.2' => '1.8.2',
-      '1.7.2' => '1.7.2',
-      '1.5.2' => '1.5.2',
-    ),
-    '#description' => t('Select which version of jQuery you want to use on your site. Drupal 7 ships with version 1.4.4 by default. It is HIGHLY recommended that you upgrade to at least 1.7.2.'),
-  );
-
-
   if (theme_get_setting('aurora_footer_js') || $form_state['rebuild']) {
    if ($form_state['rebuild']) {
      if ($form_state['triggering_element']['#name'] == 'aurora_footer_js') {

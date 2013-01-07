@@ -106,20 +106,13 @@ function aurora_template_process_html_override(&$variables) {
   $variables['css'] = drupal_add_css();
   $variables['styles']  = drupal_get_css();
 
-  // Custom Insane JavaScript Handling
   if (theme_get_setting('aurora_custom_js_handling')) {
     $variables['page_bottom'] .= aurora_get_js('footer');
     $variables['scripts'] = aurora_get_js('header');
   }
-  // Custom Normal JavaScript Handling
-  else if (theme_get_setting('aurora_footer_js')) {
+  else {
     $variables['page_bottom'] .= aurora_get_js_old('footer');
     $variables['scripts'] = aurora_get_js_old('header');
-  }
-  // Normal JavaScript Handling
-  else {
-    $variables['page_bottom'] .= drupal_get_js('footer');
-    $variables['scripts'] = drupal_get_js('header');
   }
 }
 
@@ -221,13 +214,6 @@ function aurora_preprocess_html(&$vars) {
     foreach (rdf_get_namespaces() as $prefix => $uri) {
       $vars['html_attributes_array']['prefix'][] = $prefix . ': ' . $uri . "\n";
     }
-  }
-
-  //////////////////////////////
-  // Adds Typekit Kit
-  //////////////////////////////
-  if (theme_get_setting('aurora_typekit_id')) {
-    drupal_add_js('(function(){var e={kitId:"' . theme_get_setting('aurora_typekit_id') . '",scriptTimeout:3e3},t=document.getElementsByTagName("html")[0];t.className+=" wf-loading";var n=setTimeout(function(){t.className=t.className.replace(/(\s|^)wf-loading(\s|$)/g," "),t.className+=" wf-inactive"},e.scriptTimeout),r=document.createElement("script"),i=!1;r.src="//use.typekit.net/"+e.kitId+".js",r.type="text/javascript",r.async="true",r.onload=r.onreadystatechange=function(){var t=this.readyState;if(i||t&&t!="complete"&&t!="loaded")return;i=!0,clearTimeout(n);try{Typekit.load(e)}catch(r){}};var s=document.getElementsByTagName("script")[0];s.parentNode.insertBefore(r,s)})()', array('type' => 'inline', 'force header' => true));
   }
 
   //////////////////////////////
@@ -351,7 +337,6 @@ function aurora_process_html_tag(&$vars) {
  * - #1189816: Convert comment.tpl.php to HTML5.
  */
 function aurora_preprocess_comment(&$variables) {
-  $comment = $variables['elements']['#comment'];
   $variables['user_picture'] = theme_get_setting('toggle_comment_user_picture') ? theme('user_picture', array('account' => $comment)) : '';
 }
 
@@ -431,67 +416,6 @@ function aurora_js_alter(&$js) {
   // Forces Modernizr to header if the Modernizr module is enabled.
   if (module_exists('modernizr')) {
     $js[modernizr_get_path()]['force header'] = true;
-  }
-
-  // Updates jQuery and loads it from a CDN if wanted.
-  // Partially pulled from jquery_update module.
-  $version = theme_get_setting('aurora_jquery_version');
-  $cdn = theme_get_setting('aurora_jquery_cdn');
-  if ($cdn == FALSE && $version == '1.4.4') {
-    // There is no CDN selected, and the jQuery version has not been changed.
-    return;
-  }
-
-  $path_to_theme = $base_url . '/' . drupal_get_path('theme', 'aurora');
-  $js['misc/jquery.js']['version'] = $version;
-  $js['misc/jquery.js']['group'] = JS_DRUPAL;
-
-  // Change all the Drupal JavaScript to be in the same group.
-  $js['misc/jquery.once.js']['group'] = JS_DRUPAL;
-  $js['misc/drupal.js']['group'] = JS_DRUPAL;
-  $js['settings']['group'] = JS_DRUPAL;
-
-  if ($cdn !== '0') {
-    $js['misc/jquery.js']['type'] = 'external';
-    $js['misc/jquery.js']['group'] = JS_JQUERY;
-    $fallback_url = ($version == '1.4.4') ? $base_url . '/' . $js['misc/jquery.js']['data'] . '?v=1.4.4' : $path_to_theme . '/js/jquery-' . $version . '.min.js';
-
-    switch ($cdn) {
-      case 'google':
-        $js['misc/jquery.js']['data'] = "//ajax.googleapis.com/ajax/libs/jquery/$version/jquery.min.js";
-      break;
-      case 'microsoft':
-        $js['misc/jquery.js']['data'] = "http://ajax.aspnetcdn.com/ajax/jquery/jquery-$version.min.js";
-      break;
-      case 'jquery':
-        $js['misc/jquery.js']['data'] = "http://code.jquery.com/jquery-$version.min.js";
-      break;
-    }
-    // Now add code to fall back on if the CDN is unavailable.
-    $js['misc/jquery-fallback.js'] = array(
-      'group' => $js['misc/jquery.js']['group'],
-      'weight' => $js['misc/jquery.js']['weight'] + 2,
-      'every_page' => TRUE,
-      'type' => 'inline',
-      'scope' => $js['misc/jquery.js']['scope'],
-      'cache' => FALSE,
-      'defer' => FALSE,
-      'force header' => !empty($js['misc/jquery.js']['force header']) ? $js['misc/jquery.js']['force header'] : FALSE,
-      'data' => 'window.jQuery || document.write(\'<script type="text/javascript" src="' . $fallback_url . '"><\/script>\')'
-    );
-  }
-  else {
-    // If a CDN is not selected, but an updated version still wants to be used.
-    $js['misc/jquery.js']['data'] = "$path_to_theme/js/jquery-$version.min.js";
-  }
-
-  // Finally, if we are replacing these jQuery files, there are secondary
-  // plugins we must also update.
-
-  if (isset($js['misc/jquery.form.js'])) {
-    // Replace jQuery Form plugin.
-    $js['misc/jquery.form.js']['data'] = "$path_to_theme/js/jquery.form.js";
-    $js['misc/jquery.form.js']['version'] = '2.67';
   }
 }
 
