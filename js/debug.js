@@ -1,8 +1,8 @@
 jQuery(function($) {
-  
+
   var viewportWidth = $('#aurora-viewport-width');
   var modernizrDebug = $('#aurora-modernizr-debug');
-  
+
   //////////////////////////////
   // Localstorage Test
   //////////////////////////////
@@ -13,18 +13,18 @@ jQuery(function($) {
       return false;
     }
   }
-  
+
   //////////////////////////////
   // Viewport Width Display
   //////////////////////////////
   if (viewportWidth.length) {
     var widthPX = $(window).width();
     var widthEM = widthPX / 16;
-    
+
     if (supports_html5_storage()) {
       var viewportStatus = localStorage.getItem("Aurora Viewport Storage");
     }
-    
+
     if (viewportStatus !== null) {
       if (viewportStatus == 'px') {
         viewportWidth.html(widthPX + 'px');
@@ -37,8 +37,8 @@ jQuery(function($) {
         localStorage.setItem("Aurora Viewport Storage", 'em');
       }
     }
-    
-    
+
+
 
     viewportWidth.click(function() {
       $(window).resize(function() {
@@ -78,7 +78,7 @@ jQuery(function($) {
       }
     });
   }
-  
+
   //////////////////////////////
   // Modernizr Features Display
   //////////////////////////////
@@ -88,23 +88,23 @@ jQuery(function($) {
       console.log('Modernizr Not Loaded!');
     }
     else {
-      
+
       if (supports_html5_storage()) {
         var modernizrStatus = localStorage.getItem("Aurora Modernizr Storage");
       }
-      
+
       if (modernizrStatus !== null) {
         modernizrDebug.removeClass('open closed');
         modernizrDebug.addClass(modernizrStatus);
       }
-      
+
       modernizrDebug.html($('html').attr('class'));
       modernizrDebug.click(function() {
         if ($(this).hasClass('open')) {
           $(this).removeClass('open');
           $(this).addClass('closed');
-          
-          
+
+
           if (supports_html5_storage()) {
             localStorage.setItem("Aurora Modernizr Storage", 'closed');
           }
@@ -112,7 +112,7 @@ jQuery(function($) {
         else if ($(this).hasClass('closed')) {
           $(this).removeClass('closed');
           $(this).addClass('open');
-          
+
           if (supports_html5_storage()) {
             localStorage.setItem("Aurora Modernizr Storage", 'open');
           }

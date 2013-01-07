@@ -32,7 +32,7 @@ function aurora_sort_css_js($a, $b) {
       return 1;
     }
   }
-  
+
   // Within a group, order all infrequently needed, page-specific files after
   // common files needed throughout the website. Separating this way allows for
   // the aggregate file generated for all of the common files to be reused
@@ -45,7 +45,7 @@ function aurora_sort_css_js($a, $b) {
       return 1;
     }
   }
-  
+
   // Finally, order by weight.
   elseif (!empty($a['weight']) && !empty($b['weight'])) {
     if ($a['weight'] < $b['weight']) {
@@ -55,7 +55,7 @@ function aurora_sort_css_js($a, $b) {
       return 1;
     }
   }
-  
+
   else {
     return 0;
   }
