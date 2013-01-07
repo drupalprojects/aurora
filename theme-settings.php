@@ -233,6 +233,7 @@ function aurora_form_system_theme_settings_alter(&$form, &$form_state, $form_id 
     '#weight' => 225,
   );
 
+  $options = array('attributes' => array('target' => '_blank'));
   $form['development']['aurora_modernizr_debug'] = array(
     '#type' => 'checkbox',
     '#title' => t('Enable Modernizr Indicator'),
@@ -240,7 +241,7 @@ function aurora_form_system_theme_settings_alter(&$form, &$form_state, $form_id 
     '#ajax' => array(
       'callback' => 'aurora_ajax_settings_save'
     ),
-    '#description' => t('Displays an indicator of <a href="!link" target="_blank">Modernizr</a> detected features. Tap/click to toggle display of all of the available features.', array('!link' => 'http://modernizr.com/')),
+    '#description' => t('Displays an indicator of !modernizr detected features. Tap/click to toggle display of all of the available features. Install the !module for full Modernizr support.', array('!modernizr' => l('Modernizr', 'http://modernizr.com/', $options), '!module' => l('Modernizr Drupal module', 'http://drupal.org/project/modernizr', $options))),
     '#weight' => 250,
   );
 

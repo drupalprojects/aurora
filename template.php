@@ -68,9 +68,10 @@ function aurora_theme_registry_alter(&$registry) {
   if (($index = array_search('template_process_html', $registry['html']['process functions'], TRUE)) !== FALSE) {
     array_splice($registry['html']['process functions'], $index, 1, 'aurora_template_process_html_override');
   }
-  if (($index = array_search('template_process_maintenance_page', $registry['maintenance_page']['process functions'], TRUE)) !== FALSE) {
-    array_splice($registry['maintenance_page']['process functions'], $index, 1, 'aurora_template_process_maintenance_page_override');
-  }
+  // Commented out Maintance page registry handlers until further testing.
+//  if (($index = array_search('template_process_maintenance_page', $registry['maintenance_page']['process functions'], TRUE)) !== FALSE) {
+//    array_splice($registry['maintenance_page']['process functions'], $index, 1, 'aurora_template_process_maintenance_page_override');
+//  }
 }
 
 function aurora_preprocess_maintenance_page(&$vars, $hook) {
@@ -108,9 +109,12 @@ function aurora_template_process_html_override(&$variables) {
     $variables['page_bottom'] .= aurora_get_js('footer');
     $variables['scripts'] = aurora_get_js('header');
   }
-  else {
+  elseif (theme_get_setting('aurora_footer_js')) {
     $variables['page_bottom'] .= aurora_get_js_old('footer');
     $variables['scripts'] = aurora_get_js_old('header');
+  }
+  else {
+    $variables['scripts'] = drupal_get_js();
   }
 }
 
@@ -234,8 +238,8 @@ function aurora_preprocess_html(&$vars) {
   //////////////////////////////
   if (theme_get_setting('aurora_typekit_id')) {
     $typekit_id = theme_get_setting('aurora_typekit_id');
-    drupal_add_js("//use.typekit.net/$typekit_id.js", 'external');
-    drupal_add_js('try{Typekit.load();}catch(e){}', 'inline');
+    drupal_add_js("//use.typekit.net/$typekit_id.js", array('type' => 'external', 'scope' => 'header', 'force header' => TRUE));
+    drupal_add_js('try{Typekit.load();}catch(e){}', array('type' => 'inline', 'scope' => 'header', 'force header' => TRUE));
   }
 
 }
