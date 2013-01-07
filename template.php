@@ -87,8 +87,6 @@ function aurora_process_maintenance_page(&$vars, $hook) {
   aurora_process_html($vars);
 }
 
-
-
 /**
   * Overrides template_process_html() in order to provide support for awesome new stuffzors!
   *
@@ -229,6 +227,15 @@ function aurora_preprocess_html(&$vars) {
   if (theme_get_setting('aurora_viewport_width') || theme_get_setting('aurora_modernizr_debug')) {
     drupal_add_css(drupal_get_path('theme', 'aurora') . '/css/debug.css');
     drupal_add_js(drupal_get_path('theme', 'aurora') . '/js/debug.js');
+  }
+
+  //////////////////////////////
+  // Add in TypeKit Code.
+  //////////////////////////////
+  if (theme_get_setting('aurora_typekit_id')) {
+    $typekit_id = theme_get_setting('aurora_typekit_id');
+    drupal_add_js("//use.typekit.net/$typekit_id.js", 'external');
+    drupal_add_js('try{Typekit.load();}catch(e){}', 'inline');
   }
 
 }
