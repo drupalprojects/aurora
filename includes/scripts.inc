@@ -46,22 +46,26 @@ function aurora_get_js_old($scope = 'header', $javascript = NULL, $skip_alter = 
     drupal_alter('js', $javascript);
   }
 
-  // Check to see if Force Header is available and set to true.
-  // If it is neither enabled nor set to true, change scope to footer,
-  // otherwise, keep it in the header.
-  // Done again here because scope may change on alter.
-  foreach ($javascript as $js_key => $js_value) {
-    if (!empty($js_value['force header']) && $js_value['force header']) {
-      $javascript[$js_key]['scope'] = 'header';
-    }
-    else {
-      $javascript[$js_key]['scope'] = 'footer';
-    }
+  if (theme_get_setting('aurora_footer_js')) {
+    // Check to see if Force Header is available and set to true.
+    // If it is neither enabled nor set to true, change scope to footer,
+    // otherwise, keep it in the header.
+    // Done again here because scope may change on alter.
+    foreach ($javascript as $js_key => $js_value) {
+      if (!empty($js_value['force header']) && $js_value['force header']) {
+        $javascript[$js_key]['scope'] = 'header';
+      }
+      else {
+        $javascript[$js_key]['scope'] = 'footer';
+      }
 
-    if (($js_value['group'] == JS_LIBRARY || $js_value['group'] == JS_JQUERY || $js_value['group'] == JS_DRUPAL) && theme_get_setting('aurora_libraries_head')) {
-      $javascript[$js_key]['scope'] = 'header';
+      if (($js_value['group'] == JS_LIBRARY || $js_value['group'] == JS_JQUERY || $js_value['group'] == JS_DRUPAL) && theme_get_setting('aurora_libraries_head')) {
+        $javascript[$js_key]['scope'] = 'header';
+      }
     }
   }
+
+
 
   // Filter out elements of the given scope.
   $items = array();

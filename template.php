@@ -109,12 +109,9 @@ function aurora_template_process_html_override(&$variables) {
     $variables['page_bottom'] .= aurora_get_js('footer');
     $variables['scripts'] = aurora_get_js('header');
   }
-  elseif (theme_get_setting('aurora_footer_js')) {
+  else {
     $variables['page_bottom'] .= aurora_get_js_old('footer');
     $variables['scripts'] = aurora_get_js_old('header');
-  }
-  else {
-    $variables['scripts'] = drupal_get_js();
   }
 }
 
@@ -133,6 +130,7 @@ function aurora_element_info_alter(&$elements) {
   // if (theme_get_setting('aurora_toggle_extension_css') && theme_get_setting('aurora_media_queries_inline') && variable_get('preprocess_css', FALSE) && (!defined('MAINTENANCE_MODE') || MAINTENANCE_MODE != 'update')) {
   //   array_unshift($elements['styles']['#pre_render'], 'aurora_css_preprocessor');
   // }
+
 
   $elements['scripts'] = array(
     '#items' => array(),
