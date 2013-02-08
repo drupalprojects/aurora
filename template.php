@@ -192,6 +192,8 @@ function aurora_preprocess_html(&$vars) {
     $vars['chromeframe_array'] = $chromeframe;
   }
 
+  $vars['minie'] = theme_get_setting('aurora_min_ie_support');
+
   //////////////////////////////
   // HTML5 Base Theme Forwardport
   //
