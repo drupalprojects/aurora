@@ -40,14 +40,15 @@
  * @see template_process()
  */
 ?><!DOCTYPE html>
-<!--[if lt IE 7 ]> <html class="ie6 no-js"> <![endif]-->
-<!--[if IE 7 ]>    <html class="ie7 no-js"> <![endif]-->
-<!--[if IE 8 ]>    <html class="ie8 no-js"> <![endif]-->
-<!--[if IE 9 ]>    <html class="ie9 no-js"> <![endif]-->
-<!--[if (gt IE 9)|!(IE)]><!--> <html class="no-js" <?php print $html_attributes; ?>> <!--<![endif]-->
+<!--[if lt IE <?php print $minie; ?> ]>    <html class="lte-ie<?php print $minie; ?> no-js"> <![endif]-->
+<!--[if gte IE <?php print $minie; ?>]><!--> <html class="no-js" <?php print $html_attributes; ?>> <!--<![endif]-->
   <head>
     <?php print $head; ?>
     <title><?php print $head_title; ?></title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <?php print $styles; ?>
     <?php print $scripts; ?>
   </head>
