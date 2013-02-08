@@ -21,8 +21,7 @@ function aurora_form_system_theme_settings_alter(&$form, &$form_state, $form_id 
 
   $form['chromeframe'] = array(
   '#type' => 'fieldset',
-  '#title' => t('Chrome Frame'),
-  '#description' => t('Google\'s Chrome Frame is an open source project for Internet Explorer 6, 7, 8, and 9 that allows those version of Internet Explorer to <a href="!link target="_blank">harness the power of Google Chrome\'s engine</a>.', array('!link' => 'https://www.youtube.com/watch?v=sjW0Bchdj-w&feature=player_embedded"')),
+  '#title' => t('Internet Explorer Support'),
   '#weight' => -100,
   '#attributes' => array('class' => array('aurora-row-left')),
   '#prefix' => '<span class="aurora-settigns-row">',
@@ -32,13 +31,11 @@ function aurora_form_system_theme_settings_alter(&$form, &$form_state, $form_id 
   $form['chromeframe']['aurora_enable_chrome_frame'] = array(
     '#type' => 'checkbox',
     '#title' => t('Enable Chrome Frame'),
+    '#description' => t('Google\'s Chrome Frame is an open source project for Internet Explorer 6, 7, 8, and 9 that allows those version of Internet Explorer to <a href="!link target="_blank">harness the power of Google Chrome\'s engine</a>.', array('!link' => 'https://www.youtube.com/watch?v=sjW0Bchdj-w&feature=player_embedded"')),
     '#default_value' => theme_get_setting('aurora_enable_chrome_frame'),
     '#ajax' => array(
-      'callback' => 'aurora_chromeframe_options',
-      'wrapper' => 'cf-settings',
-      'method' => 'replace'
-    ),
-
+      'callback' => 'aurora_ajax_settings_save'
+     ),
    );
 
   $form['chromeframe']['aurora_min_ie_support'] = array(
@@ -59,26 +56,6 @@ function aurora_form_system_theme_settings_alter(&$form, &$form_state, $form_id 
       'callback' => 'aurora_ajax_settings_save'
      ),
   );
-
-  if (theme_get_setting('aurora_enable_chrome_frame') || $form_state['rebuild']) {
-   if ($form_state['rebuild']) {
-     if ($form_state['triggering_element']['#name'] == 'aurora_enable_chrome_frame') {
-       if ($form_state['triggering_element']['#value'] == 1) {
-
-         $form['chromeframe']['aurora_min_ie_support']['#disabled'] = false;
-       }
-       else {
-         $form['chromeframe']['aurora_min_ie_support']['#disabled'] = true;
-       }
-     }
-   }
-   else {
-     $form['chromeframe']['aurora_min_ie_support']['#disabled'] = false;
-   }
-  }
-  else {
-   $form['chromeframe']['aurora_min_ie_support']['#disabled'] = true;
-  }
 
   //////////////////////////////
   // Miscelaneous
