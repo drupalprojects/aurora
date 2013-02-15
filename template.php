@@ -325,17 +325,6 @@ function aurora_preprocess_node(&$variables) {
   $variables['attributes_array']['role'] = 'article';
 }
 
-/**
-  * Implements hook_js_alter
-  */
-function aurora_js_alter(&$js) {
-  global $base_url;
-  // Forces Modernizr to header if the Modernizr module is enabled.
-  if (module_exists('modernizr')) {
-    $js[modernizr_get_path()]['force header'] = true;
-  }
-}
-
 function aurora_preprocess_panels_pane(&$vars) {
   $subtype = $vars['pane']->subtype;
   $layout = $vars['display']->layout;
