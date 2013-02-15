@@ -16,16 +16,45 @@ function aurora_form_system_theme_settings_alter(&$form, &$form_state, $form_id 
   drupal_add_css(drupal_get_path('theme', 'aurora') . '/css/settings.css');
 
   //////////////////////////////
+  // Recomended modules
+  //////////////////////////////
+
+  $recomended_modules = aurora_recomended_modules();
+
+  if (!empty($recomended_modules)) {
+    $form['recomended_modules'] = array(
+      '#type' => 'fieldset',
+      '#title' => t('Recommended Modules'),
+      '#description' => t('Aurora was build in conjunction with several other modules to help streamline development. Some of these modules are not downloaded or enabled on your site. For maximum Aurora awesome-sauce, you should take a look at the following modules.'),
+      '#weight' => -1000,
+      '#attributes' => array('class' => array('aurora-recommended-modules')),
+    );
+
+    foreach($recomended_modules as $id => $module) {
+      $form['recomended_modules'][$id] = array(
+        '#type' => 'item',
+        '#title' => l($module['name'], 'http://drupal.org/project/' . $id, array('attributes' => array('target' => '_blank'))),
+        '#description' => $module['description'],
+        '#required' => $module['required'],
+      );
+
+    }
+
+
+  }
+
+
+  //////////////////////////////
   // Chrome Frame
   //////////////////////////////
 
   $form['chromeframe'] = array(
-  '#type' => 'fieldset',
-  '#title' => t('Internet Explorer Support'),
-  '#weight' => -100,
-  '#attributes' => array('class' => array('aurora-row-left')),
-  '#prefix' => '<span class="aurora-settigns-row">',
-  '#parents' => array('vtb'),
+    '#type' => 'fieldset',
+    '#title' => t('Internet Explorer Support'),
+    '#weight' => -100,
+    '#attributes' => array('class' => array('aurora-row-left')),
+    '#prefix' => '<span class="aurora-settigns-row">',
+    '#parents' => array('vtb'),
   );
 
   $form['chromeframe']['aurora_enable_chrome_frame'] = array(
@@ -189,4 +218,42 @@ function aurora_ajax_settings_save($form, $form_state) {
     $theme_settings[$trigger] = 0;
   }
   variable_set('theme_' . $theme . '_settings', $theme_settings);
+}
+
+function aurora_recomended_modules() {
+  $return = array();
+
+  if (!module_exists('magic')) {
+    $return['magic'] = array(
+      'name' => t('Magic Module'),
+      'description' => t('The magic module will add in great JavaScript and CSS preprocessing abilities. Highly recommended for any theme development.'),
+      'required' => TRUE,
+    );
+  }
+
+  if (!module_exists('jquery_update')) {
+    $return['jquery_update'] = array(
+      'name' => t('jQuery Update'),
+      'description' => t('jQuery update will update the jQuery code base on your site from Drupal\'s base version 1.4. It will also allow jQuery to be loaded from a CDN, for added performance.'),
+      'required' => FALSE,
+    );
+  }
+
+  if (!module_exists('modernizr')) {
+    $return['modernizr'] = array(
+      'name' => t('Modernizr Module'),
+      'description' => t('The modernizr module will add in the !modernizr library of code to better help theme development.', array('!modernizr' => l('Modernizr', "http://modernizr.com/", array('attributes' => array('target' => '_blank'))))),
+      'required' => FALSE,
+    );
+  }
+
+  if (!module_exists('borealis')) {
+    $return['borealis'] = array(
+      'name' => t('Borealis Module'),
+      'description' => t('Borealis was made for Aurora to include responsive images and other '),
+      'required' => FALSE,
+    );
+  }
+
+  return $return;
 }
