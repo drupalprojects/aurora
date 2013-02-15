@@ -39,40 +39,7 @@
  *   http://drupal.org/project/aurora
  */
 
-// We set a specific group for jquery, so our CDN work actually works.
-define('JS_JQUERY', -10000);
-define('JS_DRUPAL', -9000);
 
-require_once dirname(__FILE__) . '/includes/common.inc';
-require_once dirname(__FILE__) . '/includes/scripts.inc';
-
-
-// Auto-rebuild the theme registry during theme development.
-if (theme_get_setting('aurora_rebuild_registry') && !defined('MAINTENANCE_MODE')) {
-  // Rebuild .info data.
-  system_rebuild_theme_data();
-  // Rebuild theme registry.
-  drupal_theme_rebuild();
-}
-
-//////////////////////////////
-// Absolutely Amazing Omega Sideport
-//////////////////////////////
-
-/**
-  * Implements hook_theme_registry_alter
-  */
-function aurora_theme_registry_alter(&$registry) {
-  // Override template_process_html() in order to add support for all of the Awesome.
-  // Again, huge, amazing ups to the wizard Sebastian Siemssen (fubhy) for showing me how to do this.
-  if (($index = array_search('template_process_html', $registry['html']['process functions'], TRUE)) !== FALSE) {
-    array_splice($registry['html']['process functions'], $index, 1, 'aurora_template_process_html_override');
-  }
-  // Commented out Maintance page registry handlers until further testing.
-//  if (($index = array_search('template_process_maintenance_page', $registry['maintenance_page']['process functions'], TRUE)) !== FALSE) {
-//    array_splice($registry['maintenance_page']['process functions'], $index, 1, 'aurora_template_process_maintenance_page_override');
-//  }
-}
 
 function aurora_preprocess_maintenance_page(&$vars, $hook) {
   // When a variable is manipulated or added in preprocess_html or
@@ -88,58 +55,6 @@ function aurora_process_maintenance_page(&$vars, $hook) {
   aurora_process_html($vars);
 }
 
-/**
-  * Overrides template_process_html() in order to provide support for awesome new stuffzors!
-  *
-  * Huge, amazing ups to the wizard Sebastian Siemssen (fubhy) for showing me how to do this.
-  */
-function aurora_template_process_html_override(&$variables) {
-  // Render page_top and page_bottom into top level variables.
-  $variables['page_top'] = drupal_render($variables['page']['page_top']);
-  $variables['page_bottom'] = drupal_render($variables['page']['page_bottom']);
-  // Place the rendered HTML for the page body into a top level variable.
-  $variables['page'] = $variables['page']['#children'];
-
-
-  $variables['head'] = drupal_get_html_head();
-  $variables['css'] = drupal_add_css();
-  $variables['styles']  = drupal_get_css();
-
-  if (theme_get_setting('aurora_custom_js_handling')) {
-    $variables['page_bottom'] .= aurora_get_js('footer');
-    $variables['scripts'] = aurora_get_js('header');
-  }
-  else {
-    $variables['page_bottom'] .= aurora_get_js_old('footer');
-    $variables['scripts'] = aurora_get_js_old('header');
-  }
-}
-
-function aurora_template_process_maintenance_page_override(&$vars) {
-  $vars['scripts'] = aurora_get_js();
-  $vars['page_bottom'] = aurora_get_js('footer');
-  $vars['css'] = drupal_add_css();
-  $vars['styles'] = drupal_get_css();
-  $vars['head'] = drupal_get_html_head();
-}
-
-/**
- * Implements hook_element_info_alter().
- */
-function aurora_element_info_alter(&$elements) {
-  // if (theme_get_setting('aurora_toggle_extension_css') && theme_get_setting('aurora_media_queries_inline') && variable_get('preprocess_css', FALSE) && (!defined('MAINTENANCE_MODE') || MAINTENANCE_MODE != 'update')) {
-  //   array_unshift($elements['styles']['#pre_render'], 'aurora_css_preprocessor');
-  // }
-
-
-  $elements['scripts'] = array(
-    '#items' => array(),
-    '#pre_render' => array('aurora_pre_render_scripts'),
-    '#group_callback' => 'aurora_group_js',
-    '#aggregate_callback' => 'aurora_aggregate_js',
-    '#type' => 'scripts'
-  );
-}
 
 //////////////////////////////
 // HTML5 Project Sideport
@@ -225,13 +140,6 @@ function aurora_preprocess_html(&$vars) {
     drupal_add_js("document.write('<script src=\"http://' + (location.host || 'localhost').split(':')[0] + ':35729/livereload.js?snipver=1\"></' + 'script>')", array('type' => 'inline', 'scope' => 'footer', 'weight' => 9999));
   }
 
-  //////////////////////////////
-  // RWD Debug Integration
-  //////////////////////////////
-  if (theme_get_setting('aurora_viewport_width') || theme_get_setting('aurora_modernizr_debug')) {
-    drupal_add_css(drupal_get_path('theme', 'aurora') . '/css/debug.css');
-    drupal_add_js(drupal_get_path('theme', 'aurora') . '/js/debug.js');
-  }
 
   //////////////////////////////
   // Add in TypeKit Code.

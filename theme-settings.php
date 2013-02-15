@@ -104,63 +104,6 @@ function aurora_form_system_theme_settings_alter(&$form, &$form_state, $form_id 
 
 
   //////////////////////////////
-  // JavaScript
-  //////////////////////////////
-  $form['javascript'] = array(
-    '#type' => 'fieldset',
-    '#title' => t('JavaScript'),
-    '#weight' => -98,
-    '#description' => t('A pile of JavaScript options for you to use and abuse. <div class="messages warning"><strong>WARNING:</strong> Some of these options may wind up breaking existing JavaScript. Use with caution.</div>'),
-  );
-
-  $form['javascript']['aurora_footer_js'] = array(
-    '#type' => 'checkbox',
-    '#title' => t('Move JavaScript to the Bottom'),
-    '#default_value' => theme_get_setting('aurora_footer_js'),
-    '#ajax' => array(
-      'callback' => 'aurora_ajax_settings_save'
-    ),
-    '#description' => t('Will move all JavaScript to the bottom of your page. This can be overridden on an individual basis by setting the <pre>\'force header\' => true</pre> option in <pre>drupal_add_js</pre> or by using <pre>hook_js_alter</pre> to add the option to other JavaScript files.'),
-    '#ajax' => array(
-      'callback' => 'aurora_js_footer',
-      'wrapper' => 'jsh-settings',
-      'method' => 'replace'
-    ),
-  );
-
-  $form['javascript']['aurora_libraries_head'] = array(
-    '#type' => 'checkbox',
-    '#title' => t('Keep Libraries in the Head'),
-    '#default_value' => theme_get_setting('aurora_libraries_head'),
-    '#ajax' => array(
-      'callback' => 'aurora_ajax_settings_save'
-    ),
-    '#prefix' => '<span id="jsh-settings">',
-    '#suffix' => '</span>',
-    '#description' => t('If you have JavaScript inline in the body of your document, such as if you are displaying ads, you may need to keep Drupal JS Libraries in the head instead of moving them to the footer. This will keep Drupal libraries in the head while moving all other JavaScript to the footer.'),
-  );
-
-  if (theme_get_setting('aurora_footer_js') || $form_state['rebuild']) {
-   if ($form_state['rebuild']) {
-     if ($form_state['triggering_element']['#name'] == 'aurora_footer_js') {
-       if ($form_state['triggering_element']['#value'] == 1) {
-
-         $form['javascript']['aurora_libraries_head']['#disabled'] = false;
-       }
-       else {
-         $form['javascript']['aurora_libraries_head']['#disabled'] = true;
-       }
-     }
-   }
-   else {
-     $form['javascript']['aurora_libraries_head']['#disabled'] = false;
-   }
-  }
-  else {
-   $form['javascript']['aurora_libraries_head']['#disabled'] = true;
-  }
-
-  //////////////////////////////
   // Development
   //////////////////////////////
 
@@ -171,22 +114,6 @@ function aurora_form_system_theme_settings_alter(&$form, &$form_state, $form_id 
     '#weight' => 52
   );
 
-  $form['development']['aurora_rebuild_registry'] = array(
-    '#type' => 'checkbox',
-    '#title' => t('Rebuild Theme Registry on Reload'),
-    '#default_value' => theme_get_setting('aurora_rebuild_registry'),
-    '#ajax' => array(
-      'callback' => 'aurora_ajax_settings_save'
-    ),
-    '#description' => t('<a href="!link" target="_blank">Rebuild the theme registry</a> during project development.', array('!link' => 'http://drupal.org/node/173880#theme-registry')),
-  );
-
-  // $form['development']['aurora_uncompressed_jquery'] = array(
-  //   '#type' => 'checkbox',
-  //   '#title' => t('Use uncompressed jQuery'),
-  //   '#default_value' => theme_get_setting('aurora_uncompressed_jquery'),
-  //   '#description' => t('If you are loading your jQuery from a CDN, selecting this will use the uncompressed version of jQuery. Do not use on production sites.'),
-  // );
 
   $form['development']['aurora_livereload'] = array(
     '#type' => 'checkbox',
@@ -197,49 +124,6 @@ function aurora_form_system_theme_settings_alter(&$form, &$form_state, $form_id 
     ),
     '#description' => t('Enable <a href="!link" target="_blank">LiveReload</a> to refresh your browser without you needing to. Awesome for designing in browser.', array('!link' => 'http://livereload.com/')),
     '#weight' => 200,
-  );
-
-  $form['development']['aurora_viewport_width'] = array(
-    '#type' => 'checkbox',
-    '#title' => t('Enable Viewport Width Indicator'),
-    '#default_value' => theme_get_setting('aurora_viewport_width'),
-    '#ajax' => array(
-      'callback' => 'aurora_ajax_settings_save'
-    ),
-    '#description' => t('Displays an indicator of the viewport. Tap/click to toggle between <em>em</em> and <em>px</em>/'),
-    '#weight' => 225,
-  );
-
-  $options = array('attributes' => array('target' => '_blank'));
-  $form['development']['aurora_modernizr_debug'] = array(
-    '#type' => 'checkbox',
-    '#title' => t('Enable Modernizr Indicator'),
-    '#default_value' => theme_get_setting('aurora_modernizr_debug'),
-    '#ajax' => array(
-      'callback' => 'aurora_ajax_settings_save'
-    ),
-    '#description' => t('Displays an indicator of !modernizr detected features. Tap/click to toggle display of all of the available features. Install the !module for full Modernizr support.', array('!modernizr' => l('Modernizr', 'http://modernizr.com/', $options), '!module' => l('Modernizr Drupal module', 'http://drupal.org/project/modernizr', $options))),
-    '#weight' => 250,
-  );
-
-  //////////////////////////////
-  // Experimental Options
-  //////////////////////////////
-  $form['experimental'] = array(
-    '#type' => 'fieldset',
-    '#title' => t('Experimental'),
-    '#description' => t('You like bleeding? We\'ve got your bleeding edge! <div class="messages warning"><strong>WARNING:</strong> Abandon hope all ye who enter here! These options are <em>very</em> experimental and may break things, use with caution.</div>'),
-    '#weight' => 53
-  );
-
-  $form['experimental']['aurora_custom_js_handling'] = array(
-    '#type' => 'checkbox',
-    '#title' => t('Use Experimental JavaScript Handling'),
-    '#default_value' => theme_get_setting('aurora_custom_js_handling'),
-    '#ajax' => array(
-      'callback' => 'aurora_ajax_settings_save'
-    ),
-    '#description' => t('Enable experimental JavaScript handling, including defer, async, and browser specific JavaScript.'),
   );
 
   //////////////////////////////
@@ -290,24 +174,6 @@ function aurora_chromeframe_options($form, $form_state) {
   else {
     $form['chromeframe']['aurora_min_ie_support']['#disabled'] = true;
     return drupal_render($form['chromeframe']['aurora_min_ie_support']);
-  }
-  return '';
-}
-
-function aurora_js_footer($form, $form_state) {
-  $theme = $form_state['build_info']['args'][0];
-  $theme_settings = variable_get('theme_' . $theme . '_settings', array());
-
-  $theme_settings['aurora_footer_js'] = $form_state['input']['aurora_footer_js'];
-  variable_set('theme_' . $theme . '_settings', $theme_settings);
-
-  if ($form_state['input']['aurora_footer_js'] == 1) {
-    $form['javascript']['aurora_libraries_head']['#disabled'] = false;
-    return drupal_render($form['javascript']['aurora_libraries_head']);
-  }
-  else {
-    $form['javascript']['aurora_libraries_head']['#disabled'] = true;
-    return drupal_render($form['javascript']['aurora_libraries_head']);
   }
   return '';
 }
