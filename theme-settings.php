@@ -25,6 +25,8 @@ function aurora_form_system_theme_settings_alter(&$form, &$form_state, $form_id 
     $form['recomended_modules'] = array(
       '#type' => 'fieldset',
       '#title' => t('Recommended Modules'),
+      '#collapsible' => TRUE,
+      '#collapsed' => FALSE,
       '#description' => t('Aurora was build in conjunction with several other modules to help streamline development. Some of these modules are not downloaded or enabled on your site. For maximum Aurora awesome-sauce, you should take a look at the following modules.'),
       '#weight' => -1000,
       '#attributes' => array('class' => array('aurora-recommended-modules')),
@@ -39,8 +41,6 @@ function aurora_form_system_theme_settings_alter(&$form, &$form_state, $form_id 
       );
 
     }
-
-
   }
 
 
@@ -220,6 +220,10 @@ function aurora_ajax_settings_save($form, $form_state) {
   variable_set('theme_' . $theme . '_settings', $theme_settings);
 }
 
+/**
+ * A function to return an array of modules that should be enabled alongside
+ * Aurora for maximum front-end awesomesauce.
+ */
 function aurora_recomended_modules() {
   $return = array();
 
