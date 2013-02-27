@@ -99,16 +99,6 @@ function aurora_form_system_theme_settings_alter(&$form, &$form_state, $form_id 
    '#suffix' => '</span>',
   );
 
-  $form['misc']['aurora_remove_core_css'] = array(
-    '#type' => 'checkbox',
-    '#title' => t('Remove Core CSS'),
-    '#default_value' => theme_get_setting('aurora_remove_core_css'),
-    '#ajax' => array(
-      'callback' => 'aurora_ajax_settings_save'
-    ),
-    '#description' => t('Removes all Core provided CSS files.'),
-  );
-
   $form['misc']['aurora_html_tags'] = array(
     '#type' => 'checkbox',
     '#title' => t('Prune HTML Tags'),
