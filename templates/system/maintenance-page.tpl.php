@@ -38,7 +38,7 @@
         <?php endif; ?>
 
         <?php if ($site_name || $site_slogan): ?>
-          <hgroup id="name-and-slogan">
+          <div id="name-and-slogan">
             <?php if ($site_name): ?>
               <h1 id="site-name">
                 <a href="<?php print $front_page; ?>" title="<?php print t('Home'); ?>" rel="home"><?php print $site_name; ?></a>
@@ -48,7 +48,7 @@
             <?php if ($site_slogan): ?>
               <h3 id="site-slogan"><?php print $site_slogan; ?></h3>
             <?php endif; ?>
-          </hgroup><!-- #name-and-slogan -->
+          </div><!-- #name-and-slogan -->
         <?php endif; ?>
       </header>
 
