@@ -80,7 +80,7 @@
 <?php if ($page['main']): ?>
   <main id="main" role="main">
     <?php print render($page['main']); ?>
-  </div>
+  </main>
 <?php endif; ?>
 
 
