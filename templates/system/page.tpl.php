@@ -67,80 +67,30 @@
  */
 ?>
 
-  <div id="page" role="document">
-    <header id="header" role="banner" class="clearfix">
+<?php if ($page['header']): ?>
+  <header id="header" role="banner">
+    <?php print render($page['header']); ?>
+  </header>
+<?php endif; ?>
 
-      <?php if ($logo): ?>
-        <a href="<?php print $front_page; ?>" title="<?php print t('Home'); ?>" rel="home" id="logo">
-          <img src="<?php print $logo; ?>" alt="<?php print t('Home'); ?>" />
-        </a>
-      <?php endif; ?>
+<?php if ($page['main_prefix']): ?>
+  <?php print render($page['main_prefix']); ?>
+<?php endif; ?>
 
-      <?php if ($site_name || $site_slogan): ?>
-        <hgroup id="name-and-slogan">
-          <?php if ($site_name): ?>
-            <h1 id="site-name">
-              <a href="<?php print $front_page; ?>" title="<?php print t('Home'); ?>" rel="home"><?php print $site_name; ?></a>
-            </h1>
-          <?php endif; ?>
+<?php if ($page['main']): ?>
+  <main id="main" role="main">
+    <?php print render($page['main']); ?>
+  </main>
+<?php endif; ?>
 
-          <?php if ($site_slogan): ?>
-            <h3 id="site-slogan"><?php print $site_slogan; ?></h3>
-          <?php endif; ?>
-        </hgroup><!-- #name-and-slogan -->
-      <?php endif; ?>
 
-      <?php print render($page['header']); ?>
+<?php if ($page['main_suffix']): ?>
+  <?php print render($page['main_suffix']); ?>
+<?php endif; ?>
 
-    </header>
-    
-    <!-- #content-prefix -->
-    <?php if ($page['main_prefix']) :?>
-      <?php print render($page['main_prefix']); ?>
-    <?php endif; ?>
 
-    <?php print $breadcrumb; ?>
-
-    <?php if ($messages): ?>
-      <div id="messages" role="alertdialog"><?php print $messages; ?></div>
-    <?php endif; ?>
-
-    <div id="main" role="main" class="clearfix">
-
-      <div id="content" role="article" class="column">
-        <?php if ($page['highlighted']): ?><div id="highlighted"><?php print render($page['highlighted']); ?></div><?php endif; ?>
-        <a id="main-content"></a>
-        <?php print render($title_prefix); ?>
-        <?php if ($title): ?><h1 class="title" id="page-title"><?php print $title; ?></h1><?php endif; ?>
-        <?php print render($title_suffix); ?>
-        <?php if ($tabs): ?><div class="tabs"><?php print render($tabs); ?></div><?php endif; ?>
-        <?php print render($page['help']); ?>
-        <?php if ($action_links): ?><ul class="action-links"><?php print render($action_links); ?></ul><?php endif; ?>
-        <?php print render($page['content']); ?>
-        <?php print $feed_icons; ?>
-      </div>
-
-      <?php if ($page['sidebar_first']): ?>
-        <aside id="sidebar-first" role="complementary" class="column sidebar">
-          <?php print render($page['sidebar_first']); ?>
-        </aside><!-- #sidebar-first -->
-      <?php endif; ?>
-
-      <?php if ($page['sidebar_second']): ?>
-        <aside id="sidebar-second" role="complementary" class="column sidebar">
-          <?php print render($page['sidebar_second']); ?>
-        </aside><!-- #sidebar-second -->
-      <?php endif; ?>
-
-    </div><!-- #main -->
-    
-    <!-- #content-suffix -->
-    <?php if ($page['main_suffix']) :?>
-      <?php print render($page['main_suffix']); ?>
-    <?php endif; ?>
-
-    <footer id="footer" role="contentinfo">
-      <?php print render($page['footer']); ?>
-    </footer>
-
-  </div><!-- #page -->
+<?php if ($page['footer']): ?>
+  <footer id="footer" role="contentinfo">
+    <?php print render($page['footer']); ?>
+  </footer>
+<?php endif; ?>

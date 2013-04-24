@@ -146,34 +146,40 @@ function aurora_form_system_theme_settings_alter(&$form, &$form_state, $form_id 
   );
 
   //////////////////////////////
-  // Theme Settings Update
+  // Remove a bunch of useless theme settings
   //////////////////////////////
   unset($form['theme_settings']['toggle_main_menu']);
   unset($form['theme_settings']['toggle_secondary_menu']);
-  $form['theme_settings']['toggle_breadcrumbs'] = array(
-    '#type' => 'checkbox',
-    '#title' => t('Show Breadcrumbs'),
-    '#default_value' => theme_get_setting('toggle_breadcrumbs'),
-  );
 
-  $form['theme_settings']['toggle_logo']['#ajax'] = array('callback' => 'aurora_ajax_settings_save');
-  $form['theme_settings']['toggle_name']['#ajax'] = array('callback' => 'aurora_ajax_settings_save');
-  $form['theme_settings']['toggle_slogan']['#ajax'] = array('callback' => 'aurora_ajax_settings_save');
+  unset($form['theme_settings']['toggle_logo']);
+  unset($form['theme_settings']['toggle_name']);
+  unset($form['theme_settings']['toggle_slogan']);
+
+  unset($form['theme_settings']['toggle_favicon']);
+  unset($form['theme_settings']['toggle_breadcrumbs']);
+
+  //////////////////////////////
+  // Rename Toggle Display to Core Display
+  //////////////////////////////
+  $form['theme_settings']['#title'] = t('Miscellaneous display settings');
+  $form['theme_settings']['#description'] = t('Enable or disable various miscellaneous display options.');
+  $form['theme_settings']['#weight'] = 11;
+
   $form['theme_settings']['toggle_node_user_picture']['#ajax'] = array('callback' => 'aurora_ajax_settings_save');
   $form['theme_settings']['toggle_comment_user_picture']['#ajax'] = array('callback' => 'aurora_ajax_settings_save');
   $form['theme_settings']['toggle_comment_user_verification']['#ajax'] = array('callback' => 'aurora_ajax_settings_save');
-  $form['theme_settings']['toggle_favicon']['#ajax'] = array('callback' => 'aurora_ajax_settings_save');
-  $form['theme_settings']['toggle_breadcrumbs']['#ajax'] = array('callback' => 'aurora_ajax_settings_save');
+
+
 
   //////////////////////////////
   // Logo and Favicon
   //////////////////////////////
-  $form['logo']['#weight'] = 10;
+  $form['logo']['#weight'] = 9;
   $form['logo']['#attributes']['class'][] = 'aurora-row-left';
   $form['logo']['#prefix'] = '<span class="aurora-settigns-row">';
   $form['logo']['default_logo']['#ajax'] = array('callback' => 'aurora_ajax_settings_save');
 
-  $form['favicon']['#weight'] = 11;
+  $form['favicon']['#weight'] = 10;
   $form['favicon']['#attributes']['class'][] = 'aurora-row-right';
   $form['favicon']['#suffix'] = '</span>';
   $form['favicon']['default_favicon']['#ajax'] = array('callback' => 'aurora_ajax_settings_save');
