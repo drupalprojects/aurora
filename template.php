@@ -43,8 +43,14 @@
 define('JS_JQUERY', -10000);
 define('JS_DRUPAL', -9000);
 
+//////////////////////////////
+// Includes
+//////////////////////////////
 require_once dirname(__FILE__) . '/includes/common.inc';
 require_once dirname(__FILE__) . '/includes/scripts.inc';
+require_once dirname(__FILE__) . '/includes/theme.inc';
+require_once dirname(__FILE__) . '/includes/pager.inc';
+require_once dirname(__FILE__) . '/includes/messages.inc';
 
 
 // Auto-rebuild the theme registry during theme development.
@@ -440,4 +446,102 @@ function aurora_panels_default_style_render_region($vars) {
   $output = '';
   $output .= implode("\n", $vars['panes']);
   return $output;
+}
+
+
+//////////////////////////////
+// Blockify Theme Overrides
+//////////////////////////////
+
+// /**
+//   * Implements theme_blockify_logo
+//   */
+// function aurora_blockify_logo(&$vars) {
+//   return '';
+// }
+
+function aurora_preprocess_block(&$vars) {
+  // Logo Block
+  if ($vars['block']->delta == 'blockify-logo') {
+    $vars['theme_hook_suggestions'][] = 'block__logo';
+
+    $site_name = filter_xss_admin(variable_get('site_name', 'Drupal'));
+
+    // Strip the base_path from the beginning of the logo path.
+    $path = preg_replace('|^' . base_path() . '|', '', theme_get_setting('logo'));
+
+    $image = array(
+      '#theme' => 'image',
+      '#path' => $path,
+      '#alt' => t('!site_name Logo', array(
+        '!site_name' => $site_name,
+      ))
+    );
+
+    $vars['logo'] = $image;
+    $vars['sitename'] = $site_name;
+  }
+  // Site Name Block
+  else if ($vars['block']->delta == 'blockify-site-name') {
+    $vars['theme_hook_suggestions'][] = 'block__site_name';
+
+    $site_name = filter_xss_admin(variable_get('site_name', 'Drupal'));
+
+    $vars['sitename'] = $site_name;
+  }
+  // Site Slogan Block
+  else if ($vars['block']->delta == 'blockify-site-slogan') {
+    $vars['theme_hook_suggestions'][] = 'block__site_slogan';
+
+    $slogan = filter_xss_admin(variable_get('site_slogan', 'Drupal'));
+
+    $vars['slogan'] = $slogan;
+  }
+  // Page Title
+  else if ($vars['block']->delta == 'blockify-page-title') {
+    $vars['theme_hook_suggestions'][] = 'block__page_title';
+
+    $vars['title'] = drupal_get_title();
+  }
+  else if ($vars['block']->delta == 'blockify-messages') {
+    $vars['theme_hook_suggestions'][] = 'block__messages';
+  }
+  // Breadcrumbs
+  else if ($vars['block']->delta == 'blockify-breadcrumb') {
+    $vars['theme_hook_suggestions'][] = 'block__breadcrumbs';
+
+    $breadcrumbs = drupal_get_breadcrumb();
+
+    $vars['breadcrumbs'] = theme('breadcrumb', $breadcrumbs);
+  }
+  // Tabs
+  else if ($vars['block']->delta == 'blockify-tabs') {
+    $vars['theme_hook_suggestions'][] = 'block__tabs';
+
+    $primary = menu_primary_local_tasks();
+    $seconday = menu_secondary_local_tasks();
+
+    $tabs = array(
+      'primary' => $primary,
+      'secondary' => $secondary,
+    );
+
+    $tabs = theme('menu_local_tasks', $tabs);
+
+    $vars['tabs'] = $tabs;
+  }
+  // Actions
+  else if ($vars['block']->delta == 'blockify-actions') {
+    $vars['theme_hook_suggestions'][] = 'block__actions';
+
+    $actions = menu_local_actions();
+    $vars['actions'] = $actions;
+  }
+  // Feed Icons
+  else if ($vars['block']->delta == 'blockify-feed-icons') {
+    $vars['theme_hook_suggestions'][] = 'block__feed_icons';
+
+    $icons = drupal_get_feeds();
+    $vars['icons'] = $icons;
+  }
 }
