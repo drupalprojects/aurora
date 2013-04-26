@@ -262,13 +262,5 @@ function aurora_recomended_modules() {
     );
   }
 
-  if (!module_exists('blockify')) {
-    $return['blockify'] = array(
-      'name' => t('Blockify Module'),
-      'description' => t('This module will expose many of Drupal\'s core elements as blocks. Aurora has many of the templates for this module already.'),
-      'required' => FALSE,
-    );
-  }
-
   return $return;
 }
