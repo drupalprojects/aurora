@@ -22,14 +22,22 @@ function aurora_form_system_theme_settings_alter(&$form, &$form_state, $form_id 
   $recomended_modules = aurora_recomended_modules();
 
   if (!empty($recomended_modules)) {
+    $hide = theme_get_setting('hide_recomended_modules');
+
     $form['recomended_modules'] = array(
       '#type' => 'fieldset',
       '#title' => t('Recommended Modules'),
       '#collapsible' => TRUE,
-      '#collapsed' => FALSE,
+      '#collapsed' => $hide,
       '#description' => t('Aurora was build in conjunction with several other modules to help streamline development. Some of these modules are not downloaded or enabled on your site. For maximum Aurora awesome-sauce, you should take a look at the following modules.'),
       '#weight' => -1000,
       '#attributes' => array('class' => array('aurora-recommended-modules')),
+    );
+
+    $form['recomended_modules']['hide_recomended_modules'] = array(
+      '#type' => 'checkbox',
+      '#title' => t('Hide this warning by default.'),
+      '#default_value' => $hide,
     );
 
     foreach($recomended_modules as $id => $module) {
@@ -39,7 +47,6 @@ function aurora_form_system_theme_settings_alter(&$form, &$form_state, $form_id 
         '#description' => $module['description'],
         '#required' => $module['required'],
       );
-
     }
   }
 
@@ -251,6 +258,14 @@ function aurora_recomended_modules() {
     $return['borealis'] = array(
       'name' => t('Borealis Module'),
       'description' => t('Borealis was made for Aurora to include responsive images and other '),
+      'required' => FALSE,
+    );
+  }
+
+  if (!module_exists('blockify')) {
+    $return['blockify'] = array(
+      'name' => t('Blockify Module'),
+      'description' => t('This module will expose many of Drupal\'s core elements as blocks. Aurora has many of the templates for this module already.'),
       'required' => FALSE,
     );
   }
