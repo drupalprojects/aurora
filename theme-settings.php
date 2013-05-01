@@ -104,7 +104,7 @@ function aurora_form_system_theme_settings_alter(&$form, &$form_state, $form_id 
 
   $form['misc'] = array(
    '#type' => 'fieldset',
-   '#title' => t('Miscelaneous'),
+   '#title' => t('Miscellaneous'),
    '#description' => t('Various little bits and bobs for your theme.'),
    '#weight' => -99,
    '#attributes' => array('class' => array('aurora-row-right')),
