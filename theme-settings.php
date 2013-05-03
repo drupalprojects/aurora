@@ -138,24 +138,17 @@ function aurora_form_system_theme_settings_alter(&$form, &$form_state, $form_id 
   // Development
   //////////////////////////////
 
-  $form['development'] = array(
-    '#type' => 'fieldset',
-    '#title' => t('Development'),
-    '#description' => t('Theme like you\'ve never themed before! <div class="messages warning"><strong>WARNING:</strong> These options incur huge performance penalties and <em>must</em> be turned off on production websites.</div>'),
-    '#weight' => 52
-  );
+  if (!module_exists('magic')) {
+    $form['development'] = array(
+      '#type' => 'fieldset',
+      '#title' => t('Development'),
+      '#description' => t('Theme like you\'ve never themed before! <div class="messages warning"><strong>WARNING:</strong> These options incur huge performance penalties and <em>must</em> be turned off on production websites.</div>'),
+      '#weight' => 52
+    );
 
+    $form['development']['aurora_livereload'] = _aurora_live_reload_settings();
 
-  $form['development']['aurora_livereload'] = array(
-    '#type' => 'checkbox',
-    '#title' => t('Enable LiveReload'),
-    '#default_value' => theme_get_setting('aurora_livereload'),
-    '#ajax' => array(
-      'callback' => 'aurora_ajax_settings_save'
-    ),
-    '#description' => t('Enable <a href="!link" target="_blank">LiveReload</a> to refresh your browser without you needing to. Awesome for designing in browser.', array('!link' => 'http://livereload.com/')),
-    '#weight' => 200,
-  );
+  }
 
   //////////////////////////////
   // Remove a bunch of useless theme settings
@@ -277,3 +270,28 @@ function aurora_recomended_modules() {
 
   return $return;
 }
+
+/**
+ * Implements hook_magic_alter.
+ */
+function aurora_magic_alter(&$magic_settings, $theme) {
+  $magic_settings['dev']['aurora_livereload'] = _aurora_live_reload_settings();
+}
+
+/**
+ * Since we use these settings in two places, we just leave them here.
+ */
+function _aurora_live_reload_settings() {
+  return array(
+    '#type' => 'checkbox',
+    '#title' => t('Enable LiveReload'),
+    '#default_value' => theme_get_setting('aurora_livereload'),
+    '#ajax' => array(
+      'callback' => 'aurora_ajax_settings_save'
+    ),
+    '#description' => t('Enable <a href="!link" target="_blank">LiveReload</a> to refresh your browser without you needing to. Awesome for designing in browser.', array('!link' => 'http://livereload.com/')),
+    '#weight' => 200,
+  );
+}
+
+
