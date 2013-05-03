@@ -15,6 +15,8 @@ function aurora_form_system_theme_settings_alter(&$form, &$form_state, $form_id 
   }
   drupal_add_css(drupal_get_path('theme', 'aurora') . '/css/settings.css');
 
+  $theme = isset($form_state['build_info']['args'][0]) ? $form_state['build_info']['args'][0] : '';
+
   //////////////////////////////
   // Recomended modules
   //////////////////////////////
@@ -146,7 +148,7 @@ function aurora_form_system_theme_settings_alter(&$form, &$form_state, $form_id 
       '#weight' => 52
     );
 
-    $form['development']['aurora_livereload'] = _aurora_live_reload_settings();
+    $form['development'] = array_merge(_aurora_live_reload_settings(), $form['development']);
 
   }
 
@@ -318,4 +320,53 @@ function _aurora_live_reload_settings() {
   );
 }
 
+/**
+ * Implements hook_magic_alter.
+ */
+function aurora_magic_alter(&$magic_settings, $theme) {
+  $magic_settings['dev'] = array_merge(_aurora_live_reload_settings($theme), $magic_settings['dev']);
+}
 
+/**
+ * Since we use these settings in two places, we just leave them here.
+ */
+function _aurora_live_reload_settings($theme) {
+  $array = array();
+
+  $array['aurora_livereload'] = array(
+    '#title' => t('Enable Livereload'),
+    '#type' => 'select',
+    '#options' => array(
+      0 => t('Disabled'),
+      35729 => t('Livereload Default Port'),
+      9001 => t('Aurora Default Port'),
+      'snugug' => t('Custom Port'),
+    ),
+    '#weight' => 100,
+    '#default_value' => theme_get_setting('aurora_livereload', $theme),
+    '#ajax' => array(
+      'callback' => 'aurora_ajax_settings_save'
+    ),
+    '#description' => t('Enable <a href="!link" target="_blank">LiveReload</a> to refresh your browser without you needing to. Awesome for designing in browser.', array('!link' => 'http://livereload.com/')),
+  );
+
+  $array['aurora_livereload_port'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Livereload port'),
+    '#description' => t(''),
+    '#size' => 4,
+    '#weight' => 101,
+    '#maxlength' => 5,
+    '#ajax' => array(
+      'callback' => 'aurora_ajax_settings_save'
+    ),
+    '#default_value' => theme_get_setting('aurora_livereload_port', $theme),
+    '#states' => array(
+      'visible' => array(
+        ':input[name="aurora_livereload"]' => array('value' => 'snugug'),
+      ),
+    ),
+  );
+
+  return $array;
+}
