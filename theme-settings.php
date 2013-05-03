@@ -301,29 +301,6 @@ function aurora_recomended_modules() {
  * Implements hook_magic_alter.
  */
 function aurora_magic_alter(&$magic_settings, $theme) {
-  $magic_settings['dev']['aurora_livereload'] = _aurora_live_reload_settings();
-}
-
-/**
- * Since we use these settings in two places, we just leave them here.
- */
-function _aurora_live_reload_settings() {
-  return array(
-    '#type' => 'checkbox',
-    '#title' => t('Enable LiveReload'),
-    '#default_value' => theme_get_setting('aurora_livereload'),
-    '#ajax' => array(
-      'callback' => 'aurora_ajax_settings_save'
-    ),
-    '#description' => t('Enable <a href="!link" target="_blank">LiveReload</a> to refresh your browser without you needing to. Awesome for designing in browser.', array('!link' => 'http://livereload.com/')),
-    '#weight' => 200,
-  );
-}
-
-/**
- * Implements hook_magic_alter.
- */
-function aurora_magic_alter(&$magic_settings, $theme) {
   $magic_settings['dev'] = array_merge(_aurora_live_reload_settings($theme), $magic_settings['dev']);
 }
 
