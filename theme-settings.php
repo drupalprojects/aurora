@@ -104,7 +104,7 @@ function aurora_form_system_theme_settings_alter(&$form, &$form_state, $form_id 
 
   $form['misc'] = array(
    '#type' => 'fieldset',
-   '#title' => t('Miscelaneous'),
+   '#title' => t('Miscellaneous'),
    '#description' => t('Various little bits and bobs for your theme.'),
    '#weight' => -99,
    '#attributes' => array('class' => array('aurora-row-right')),
@@ -236,6 +236,14 @@ function aurora_recomended_modules() {
     );
   }
 
+  if (!module_exists('html5_tools')) {
+    $return['html5_tools'] = array(
+      'name' => t('HTML5 Tools'),
+      'description' => t('HTML5 Tools is a module that allows Drupal sites to be built using HTML5 ... smartly. It includes features for creating cleaner and leaner markup, providing HTML5 elements for use in fields, and streamlining CSS and JavaScript tags, amongst many other improvements.'),
+      'required' => TRUE,
+    );
+  }
+
   if (!module_exists('jquery_update')) {
     $return['jquery_update'] = array(
       'name' => t('jQuery Update'),
@@ -264,6 +272,22 @@ function aurora_recomended_modules() {
     $return['borealis'] = array(
       'name' => t('Borealis Suite'),
       'description' => t('Borealis provides two modules that make building responsive sites better. Borealis Responsive Images is an innovative, Drupal centric approach to responsive images. Borealis Semantic Blocks allows you to choose the semantics of blocks, making their output CSS much nicer.'),
+      'required' => FALSE,
+    );
+  }
+
+  if (!module_exists('fences')) {
+    $return['fences'] = array(
+      'name' => t('Fences Module'),
+      'description' => t("The Fences Module is a an easy-to-use tool to specify an HTML element for each field. This element choice will propagate everywhere the field is used, such as teasers, RSS feeds and Views. You don't have to keep re-configuring the same HTML element over and over again every time you display the field. Best of all, Fences provides leaner markup than Drupal 7 core! And can get rid of the extraneous classes too!"),
+      'required' => FALSE,
+    );
+  }
+
+  if (!module_exists('panels')) {
+    $return['panels'] = array(
+      'name' => t('Panels Module'),
+      'description' => t("The Panels module, especially when coupled with <a href=\"http://drupal.org/project/ctools\">CTool's</a> Page Manager module and Aurora's HTML5 Sections Panels layout, provides an excellent combination of tools for working with source order for the content area of your site."),
       'required' => FALSE,
     );
   }
