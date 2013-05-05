@@ -135,6 +135,14 @@ function aurora_form_system_theme_settings_alter(&$form, &$form_state, $form_id 
     '#description' => t('If you are using <a href="!link" target="_blank">Typekit</a> to serve webfonts, put your Typekit Kit ID here', array('!link' => 'https://typekit.com/')),
   );
 
+  if (module_exists('blockify') && user_access('administer blockify')) {
+
+    $form['misc']['blockify'] = array(
+      '#markup' => l('+ Configure Blockify', 'admin/config/user-interface/blockify', array('query' => array(drupal_get_destination()))),
+    );
+  }
+
+
 
   //////////////////////////////
   // Development
