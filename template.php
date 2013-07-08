@@ -270,7 +270,7 @@ function aurora_process_html_tag(&$vars) {
  * - #1189816: Convert comment.tpl.php to HTML5.
  */
 function aurora_preprocess_comment(&$variables) {
-  $variables['user_picture'] = theme_get_setting('toggle_comment_user_picture') ? theme('user_picture', array('account' => $comment)) : '';
+  $variables['user_picture'] = theme_get_setting('toggle_comment_user_picture') ? theme('user_picture', array('account' => $variables['comment'])) : '';
 }
 
 /**
