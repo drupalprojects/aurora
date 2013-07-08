@@ -80,16 +80,17 @@ function aurora_preprocess_html(&$vars) {
   );
   drupal_add_html_head($viewport, 'viewport');
 
+  // Force IE to use most up-to-date render engine.
+  $xua = array(
+    '#tag' => 'meta',
+    '#attributes' => array(
+      'http-equiv' => 'X-UA-Compatible',
+      'content' => 'IE=edge',
+    ),
+  );
   if (theme_get_setting('aurora_enable_chrome_frame')) {
-    // Force IE to use most up-to-date render engine.
-    $xua = array(
-      '#tag' => 'meta',
-      '#attributes' => array(
-        'http-equiv' => 'X-UA-Compatible',
-        'content' => 'IE=edge,chrome=1',
-      ),
-    );
-    drupal_add_html_head($xua, 'x-ua-compatible');
+
+    $xua['#attributes']['content'] .= ',chrome=1';
 
     // Chrome Frome
     $chromeframe['wrapper'] = '<!--[if lt IE ' . theme_get_setting('aurora_min_ie_support') . ' ]>';
@@ -112,6 +113,7 @@ function aurora_preprocess_html(&$vars) {
 
     $vars['chromeframe_array'] = $chromeframe;
   }
+  drupal_add_html_head($xua, 'x-ua-compatible');
 
   $vars['minie'] = theme_get_setting('aurora_min_ie_support');
 
