@@ -224,7 +224,7 @@ function aurora_process_html(&$vars) {
 /**
  * Return a themed breadcrumb trail.
  *
- * @param $variables
+ * @param $vars
  *   - title: An optional string to be used as a navigational heading to give
  *     context for breadcrumb links to screen-reader users.
  *   - title_attributes_array: Array of HTML attributes for the title. It is
@@ -236,9 +236,7 @@ function aurora_process_html(&$vars) {
  * Lifted from Zen, because John is the man.
  */
 function aurora_breadcrumb(&$vars) {
-  if (theme_get_setting('toggle_breadcrumbs')) {
-    return theme_breadcrumb($vars);
-  }
+  return theme_breadcrumb($vars);
 }
 
 /**
@@ -412,7 +410,7 @@ function aurora_preprocess_block(&$vars) {
 
     $breadcrumbs = drupal_get_breadcrumb();
 
-    $vars['breadcrumbs'] = theme('breadcrumb', $breadcrumbs);
+    $vars['breadcrumbs'] = theme('breadcrumb', array('breadcrumb' => $breadcrumbs));
   }
   // Tabs
   else if ($vars['block']->delta == 'blockify-tabs') {
