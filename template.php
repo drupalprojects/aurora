@@ -101,6 +101,7 @@ function aurora_preprocess_html(&$vars) {
   //////////////////////////////
   // Initializes attributes which are specific to the html and body elements.
   $vars['html_attributes_array'] = array();
+  $vars['rdf_attributes_array'] = array();
   $vars['body_attributes_array'] = array();
 
   // HTML element attributes.
@@ -113,7 +114,7 @@ function aurora_preprocess_html(&$vars) {
     // attribute inside the html element.
     $prefixes = array();
     foreach (rdf_get_namespaces() as $prefix => $uri) {
-      $vars['html_attributes_array']['prefix'][] = $prefix . ': ' . $uri . "\n";
+      $vars['rdf_attributes_array']['prefix'][] = $prefix . ': ' . $uri . "\n";
     }
   }
 
@@ -145,22 +146,6 @@ function aurora_preprocess_html(&$vars) {
  * Implements hook_process_html().
  */
 function aurora_process_html(&$vars) {
-  //////////////////////////////
-  // Chrome Frame
-  //////////////////////////////
-  if (theme_get_setting('aurora_enable_chrome_frame')) {
-    $cf_array = $vars['chromeframe_array'];
-    $cf = $cf_array['wrapper'] . theme_html_tag($cf_array['include']) . theme_html_tag($cf_array['launch']) . '<![endif]-->';
-
-    $cf_link = $cf_array['wrapper'] . '<p class="chromeframe">' . t('You are using an outdated browser! !upgrade or !install to better experience this site.', array('!upgrade' => l(t('Upgrade your browser today'), $cf_array['redirect']), '!install' => l(t('install Google Chrome Frame'), $cf_array['url']))) . '<![endif]-->';
-
-    if (!empty($vars['page_top'])) {
-      $vars['page_top'] .= $cf_link;
-    }
-    else {
-      $vars['page_top'] = $cf_link;
-    }
-  }
 
   //////////////////////////////
   // RWD Debug Integration
@@ -194,6 +179,7 @@ function aurora_process_html(&$vars) {
   //////////////////////////////
   // Flatten out html_attributes and body_attributes.
   $vars['html_attributes'] = drupal_attributes($vars['html_attributes_array']);
+  $vars['rdf_attributes'] = drupal_attributes($vars['rdf_attributes_array']);
   $vars['body_attributes'] = drupal_attributes($vars['body_attributes_array']);
 }
 /**
