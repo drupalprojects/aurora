@@ -309,7 +309,9 @@ function aurora_recomended_modules() {
  * Implements hook_magic_alter.
  */
 function aurora_magic_alter(&$magic_settings, $theme) {
-  $magic_settings['dev'] = array_merge(_aurora_live_reload_settings($theme), $magic_settings['dev']);
+  if (module_exists('magic_dev')) {
+    $magic_settings['dev'] = array_merge(_aurora_live_reload_settings($theme), $magic_settings['dev']);
+  }
 }
 
 /**
