@@ -88,31 +88,7 @@ function aurora_preprocess_html(&$vars) {
       'content' => 'IE=edge',
     ),
   );
-  if (theme_get_setting('aurora_enable_chrome_frame')) {
 
-    $xua['#attributes']['content'] .= ',chrome=1';
-
-    // Chrome Frome
-    $chromeframe['wrapper'] = '<!--[if lt IE ' . theme_get_setting('aurora_min_ie_support') . ' ]>';
-
-    // Chrome Frame
-    $chromeframe['redirect'] = 'http://browsehappy.com/';
-    $chromeframe['url'] = 'http://www.google.com/chromeframe/?redirect=true';
-
-    $chromeframe['include']['element'] = array(
-      '#tag' => 'script',
-      '#attributes' => array(
-        'src' => '//ajax.googleapis.com/ajax/libs/chrome-frame/1.0.3/CFInstall.min.js',
-      ),
-    );
-    $chromeframe['launch']['element'] = array(
-      '#tag' => 'script',
-      '#attributes' => array(),
-      '#value' => 'window.attachEvent("onload",function(){CFInstall.check({mode:"overlay"});})',
-    );
-
-    $vars['chromeframe_array'] = $chromeframe;
-  }
   drupal_add_html_head($xua, 'x-ua-compatible');
 
   $vars['minie'] = theme_get_setting('aurora_min_ie_support');
@@ -155,7 +131,6 @@ function aurora_preprocess_html(&$vars) {
 
     drupal_add_js("document.write('<script src=\"http://' + (location.host || 'localhost').split(':')[0] + ':$livereload_port/livereload.js?snipver=1\"></' + 'script>')", array('type' => 'inline', 'scope' => 'footer', 'weight' => 9999));
   }
-
 
   //////////////////////////////
   // Add in TypeKit Code.
