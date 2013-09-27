@@ -12,6 +12,16 @@ Aurora 3.x has had a major internal overhaul to put it inline with current best 
 
 Additionally, many of the advanced theme settings that made Aurora great have been moved out of Aurora and into [Magic](http://drupal.org/project/magic). This isn't because we don't love Aurora, but it's because we love the idea of having all of frontend be able to share in on this awesomeness. Because of this, some of your settings are going to need to be migrated.
 
+### Changes in Aurora 3.2
+
+In Aurora 3.2, the HTML5 Flexible Panels has been removed completely. Although this is due to a number of reasons the two bigs ones are that 1) it never worked exactly as we intended and 2) it is more robust to just create your own panels layout. To help with this, a sample layout has been added to Aurora to reference. This will give you far more control over the layout, and much cleaner and faster markup.
+
+Please convert any existing layouts to this method BEFORE upgrading.
+
+Links on the how to:
+https://drupal.org/node/495654
+http://drupalize.me/videos/custom-panels-layouts
+
 ## Testing Upcoming Releases
 
 If you plan on testing upcoming releases, you're going to need the prerelease Compass Aurora gem as well as the prerelease code from here or things just may break. Installing the prerelease Compass Aurora gem is easy, but it _may_ break Aurora installs requiring the previous gem. If you need to use multiple versions of a gem, look into [Bundler](http://gembundler.com/). To install the prerelease gem, type the following into your command line:
