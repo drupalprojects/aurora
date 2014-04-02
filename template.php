@@ -280,6 +280,13 @@ function aurora_css_alter(&$css) {
     $css[$color . '/color-rtl.css']['data'] = $dir . '/color/color.admin-rtl.css';
   }
 
+  // Force CSS to be added with link tags, rather than @import. This prevents
+  // crashing Chrome when using the inspector while livereload is enabled.
+  if (theme_get_setting('aurora_livereload')) {
+    foreach ($css as $key => $value) {
+      $css[$key]['preprocess'] = FALSE;
+    }
+  }
 }
 
 /**
