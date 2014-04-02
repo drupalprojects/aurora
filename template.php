@@ -301,11 +301,18 @@ function aurora_preprocess_node(&$variables) {
 }
 
 function aurora_preprocess_panels_pane(&$vars) {
-  $subtype = $vars['pane']->subtype;
-  $layout = $vars['display']->layout;
-  $vars['theme_hook_suggestions'][] = 'panels_pane__' . $layout;
-  $vars['theme_hook_suggestions'][] = 'panels_pane__' . $subtype;
-  $vars['theme_hook_suggestions'][] = 'panels_pane__' . $layout . '__' . $subtype;
+  $subtype = isset($vars['pane']->subtype) ? $vars['pane']->subtype : FALSE;
+  $layout = isset($vars['display']->layout) ? $vars['display']->layout : FALSE;
+
+  if ($subtype) {
+    $vars['theme_hook_suggestions'][] = 'panels_pane__' . $subtype;
+  }
+  if ($layout) {
+    $vars['theme_hook_suggestions'][] = 'panels_pane__' . $layout;
+  }
+  if ($subtype && $layout) {
+    $vars['theme_hook_suggestions'][] = 'panels_pane__' . $layout . '__' . $subtype;
+  }
 }
 
 function aurora_panels_default_style_render_region($vars) {
