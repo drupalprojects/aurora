@@ -353,6 +353,7 @@ function aurora_preprocess_block(&$vars) {
 
     $vars['logo'] = $image;
     $vars['sitename'] = $site_name;
+    $vars['sitepath'] = url('<front>');
   }
   // Site Name Block
   else if ($vars['block']->delta == 'blockify-site-name') {
@@ -361,6 +362,7 @@ function aurora_preprocess_block(&$vars) {
     $site_name = filter_xss_admin(variable_get('site_name', 'Drupal'));
 
     $vars['sitename'] = $site_name;
+    $vars['sitepath'] = url('<front>');
   }
   // Site Slogan Block
   else if ($vars['block']->delta == 'blockify-site-slogan') {
