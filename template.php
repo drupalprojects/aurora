@@ -240,6 +240,16 @@ function aurora_preprocess_comment(&$variables) {
  */
 function aurora_preprocess_user_profile_category(&$variables) {
   $variables['classes_array'][] = 'user-profile-category-' . drupal_html_class($variables['title']);
+
+  // We want to add some basic template suggestions, in case we are using
+  // different view modes within our user display.
+  $view_mode = $vars['elements']['#view_mode'];
+  $user = $vars['elements']['#account'];
+
+  $vars['theme_hook_suggestions'][] = 'user_profile';
+  $vars['theme_hook_suggestions'][] = 'user_profile__' . $view_mode;
+  $vars['theme_hook_suggestions'][] = 'user_profile__' . $user->uid;
+  $vars['theme_hook_suggestions'][] = 'user_profile__' . $view_mode . '__' . $user->uid;
 }
 
 /**
