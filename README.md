@@ -6,22 +6,6 @@ Aurora is an HTML5, [Sass](http://sass-lang.com/) and [Compass](http://compass-s
 
 All of [Aurora's Documentation has been moved online](http://snugug.github.io/Aurora/). The most up to date versions of all docs can be found there.
 
-## Upgrading to Aurora 3.x
-
-Aurora 3.x has had a major internal overhaul to put it inline with current best practices. The first two things you'll be likely to see are that both of the previous Sidebar regions have been removed, and all of the site information that would normally be inside your `page.tpl.php` are gone as well. While getting the sidebars back will require you to write a custom `page.tpl.php` file (we encourage you instead to use the HTML5 Sections layout with [Panels](http://drupal.org/project/panels)), the site information was removed with the express intent of moving to a Blocks Everywhere approach to these pieces of information. With that in mind, to use these, we encourage you to use the [Blockify](http://drupal.org/project/blockify) module; it has full Aurora support. We even have a full section in your theme's settings page of recommended modules to use with Aurora to get the best experience out of Drupal.
-
-Additionally, many of the advanced theme settings that made Aurora great have been moved out of Aurora and into [Magic](http://drupal.org/project/magic). This isn't because we don't love Aurora, but it's because we love the idea of having all of frontend be able to share in on this awesomeness. Because of this, some of your settings are going to need to be migrated.
-
-### Changes in Aurora 3.2
-
-In Aurora 3.2, the HTML5 Flexible Panels has been removed completely. Although this is due to a number of reasons the two bigs ones are that 1) it never worked exactly as we intended and 2) it is more robust to just create your own panels layout. To help with this, a sample layout has been added to Aurora to reference. This will give you far more control over the layout, and much cleaner and faster markup.
-
-Please convert any existing layouts to this method BEFORE upgrading.
-
-Links on the how to:
-https://drupal.org/node/495654
-http://drupalize.me/videos/custom-panels-layouts
-
 ## Yeoman
 
 We have moved the generation of subthemes to [Yeoman](http://yeoman.io/). Yeoman has a heart of gold. He's a person with feelings and opinions, but he's very easy to work with. If you think he's too opinionated, he can be easily convinced. To use Yeoman, make sure you have installed [node.js](http://nodejs.org/), then run once from the command line:
@@ -44,6 +28,23 @@ yo aurora:extras
 
  When the generator runs, it will grab all dependencies that are required. This will make sure you have your bundler dependencies, and optionally your node.js and bower dependencies.
 
+
+## Upgrading to Aurora 3.x
+
+Aurora 3.x has had a major internal overhaul to put it inline with current best practices. The first two things you'll be likely to see are that both of the previous Sidebar regions have been removed, and all of the site information that would normally be inside your `page.tpl.php` are gone as well. While getting the sidebars back will require you to write a custom `page.tpl.php` file (we encourage you instead to use the HTML5 Sections layout with [Panels](http://drupal.org/project/panels)), the site information was removed with the express intent of moving to a Blocks Everywhere approach to these pieces of information. With that in mind, to use these, we encourage you to use the [Blockify](http://drupal.org/project/blockify) module; it has full Aurora support. We even have a full section in your theme's settings page of recommended modules to use with Aurora to get the best experience out of Drupal.
+
+Additionally, many of the advanced theme settings that made Aurora great have been moved out of Aurora and into [Magic](http://drupal.org/project/magic). This isn't because we don't love Aurora, but it's because we love the idea of having all of frontend be able to share in on this awesomeness. Because of this, some of your settings are going to need to be migrated.
+
+### Changes in Aurora 3.2
+
+In Aurora 3.2, the HTML5 Flexible Panels has been removed completely. Although this is due to a number of reasons the two bigs ones are that 1) it never worked exactly as we intended and 2) it is more robust to just create your own panels layout. To help with this, a sample layout has been added to Aurora to reference. This will give you far more control over the layout, and much cleaner and faster markup.
+
+Please convert any existing layouts to this method BEFORE upgrading.
+
+Links on the how to:
+https://drupal.org/node/495654
+http://drupalize.me/videos/custom-panels-layouts
+
 ## Using Bundler
 
 Bundler is standard Ruby of managing gem dependencies, and it is highly encouraged you use it to ensure that your project is using the correct version of required gems. As stated above, this stuff moves fast, and if you are updating your gems without understanding what they break, it's likely you're going to get yourself into trouble. Bundler helps to ensure you can use the cutting edge gems on new projects while not breaking old projects.
@@ -54,7 +55,8 @@ Installing Bundler is easy, type the following into your command line:
 
 Once you've installed Bundler, in your theme's directory, where your `config.rb` file is, create a file called `Gemfile`. The Gemfile that comes with new Aurora 7.x-3.x subthemes looks like this:
 
-`# Pull gems from RubyGems
+```
+# Pull gems from RubyGems
 source 'https://rubygems.org'
 
 gem 'toolkit', '~>1.0.0'
@@ -62,7 +64,8 @@ gem 'singularitygs', '~>1.0.7'
 gem 'breakpoint', '~>2.0.2'
 gem 'sassy-buttons', '~>0.1.4'
 
-# Now that you're using Bundler, you need to run `bundle exec compass watch` instead of simply `compass watch`.`
+# Now that you're using Bundler, you need to run `bundle exec compass watch` instead of simply `compass watch`.
+```
 
 Once you've set up your Gemfile, in your command line, run the following:
 
@@ -76,13 +79,15 @@ This will install the relevant gems and ensure your theme stays at those version
 
 If you have Aurora projects at 2.x and 3.x, you need to use Bundler with your 2.x projects. A sample Gemfile for a 2.x project would look like the following:
 
-`source 'https://rubygems.org'
+```
+source 'https://rubygems.org'
 gem 'breakpoint', '1.3'
 gem 'susy', '1.0.8'
 gem 'singularitygs', '0.0.17'
 gem 'respond-to', '2.6'
 gem 'toolkit', '0.2.6'
-gem 'compass-aurora', '~>1.1.1'`
+gem 'compass-aurora', '~>1.1.1'
+```
 
 ### Maintenance
 
