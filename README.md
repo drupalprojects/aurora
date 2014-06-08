@@ -1,6 +1,6 @@
 # Aurora
 
-Aurora is an HTML5, [Sass](http://sass-lang.com/) and [Compass](http://compass-style.org/) powered minimalist base theme. It is optimized for both responsive and mobile first web design. Built to encourage best modern front end practices, Aurora comes with, [LiveReload](http://livereload.com/), [Google Chrome Frame](https://developers.google.com/chrome/chrome-frame/), and [Typekit](https://typekit.com/) integrations, with advanced integrations with [Bower](http://bower.io/) for package management and [Grunt](http://gruntjs.com/) for task management (Sass compiling, JS Hinting, Image Optimization, and app-free Live Reloading out of the box) available. It also suggests and recommends Drupal modules to get the most out of both Aurora and out of Drupal. All of the optimizations and integrations in Aurora are designed to be there only when you need them and get out of your way when you don't.
+Aurora is an HTML5, [Sass](http://sass-lang.com/) and [Compass](http://compass-style.org/) powered minimalist base theme. It is optimized for both responsive and mobile first web design. Built to encourage best modern front end practices, Aurora comes with, [LiveReload](http://livereload.com/), and [Typekit](https://typekit.com/) integrations, with advanced integrations with [Bower](http://bower.io/) for package management and [Gulp](http://gulpjs.com/) for task management (Sass compiling, JS Hinting, Image Optimization, and app-free Live Reloading out of the box) available. It also suggests and recommends Drupal modules to get the most out of both Aurora and out of Drupal. All of the optimizations and integrations in Aurora are designed to be there only when you need them and get out of your way when you don't.
 
 ## Documentation
 
@@ -22,13 +22,27 @@ Links on the how to:
 https://drupal.org/node/495654
 http://drupalize.me/videos/custom-panels-layouts
 
-## Testing Upcoming Releases
+## Yeoman
 
-If you plan on testing upcoming releases, you're going to need the prerelease Compass Aurora gem as well as the prerelease code from here or things just may break. Installing the prerelease Compass Aurora gem is easy, but it _may_ break Aurora installs requiring the previous gem. If you need to use multiple versions of a gem, look into [Bundler](http://gembundler.com/). To install the prerelease gem, type the following into your command line:
+We have moved the generation of subthemes to [Yeoman](http://yeoman.io/). Yeoman has a heart of gold. He's a person with feelings and opinions, but he's very easy to work with. If you think he's too opinionated, he can be easily convinced. To use Yeoman, make sure you have installed [node.js](http://nodejs.org/), then run once from the command line:
 
-`gem install compass-aurora --pre`
+```
+npm install -g yo generator-aurora
+```
 
-Aurora will be moving fast, and any breaking changes will be signified with a new full release (1.x to 2.x, 2.x to 3.x, etc…). This is the nature of of a frontend project attempting to stay on top of best practices as they evolve. I will try my best to have as few breaking changes as possible, and do not foresee any in the current product roadmap, so chances are 2.x will be around for a while, but bare it in mind that things may change.
+Within your theme folder, run:
+
+```bash
+yo aurora
+```
+
+You will be prompted for your project name, and the type of project you want to start. There are several flavors of Aurora, each listed below. You can also optionally add a gulpfile.js or bower.json file along with your project. If you do not select one of these options, you can add them in later with:
+
+```bash
+yo aurora:extras
+```
+
+ When the generator runs, it will grab all dependencies that are required. This will make sure you have your bundler dependencies, and optionally your node.js and bower dependencies.
 
 ## Using Bundler
 
@@ -43,13 +57,10 @@ Once you've installed Bundler, in your theme's directory, where your `config.rb`
 `# Pull gems from RubyGems
 source 'https://rubygems.org'
 
-# ~> Refers to all versions of the given gem on the current full version number, so it will be able to use any version of Compass Aurora until Compass Aurora 4.x.x. For a specific version of a gem, remove the ~>
-gem 'compass-aurora', '~>3.0.0'
 gem 'toolkit', '~>1.0.0'
 gem 'singularitygs', '~>1.0.7'
 gem 'breakpoint', '~>2.0.2'
 gem 'sassy-buttons', '~>0.1.4'
-gem 'compass-normalize', '~>1.4.3'
 
 # Now that you're using Bundler, you need to run `bundle exec compass watch` instead of simply `compass watch`.`
 
@@ -77,4 +88,4 @@ gem 'compass-aurora', '~>1.1.1'`
 
 The Aurora theme is maintained by [Sam Richard](http://drupal.org/user/820332) ([@snugug](http://twitter.com/snugug)) and [Ian Carrico](http://drupal.org/user/1300542) ([@iamcarrico](http://twitter.com/iamcarrico))
 
-Any updates or changes to the Aurora Compass Extension can be made on it's [GitHub page](https://github.com/Snugug/Aurora). Please either submit an issue or a pull request with the desired changes.
+Any updates or changes to the Aurora Yeoman Generator can be made on it's [GitHub page](https://github.com/Snugug/generator-aurora). Please either submit an issue or a pull request with the desired changes.
