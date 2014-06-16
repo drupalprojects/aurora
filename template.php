@@ -228,8 +228,8 @@ function aurora_process_html_tag(&$vars) {
  * Backports the following variable changes to Drupal 8:
  * - #1189816: Convert comment.tpl.php to HTML5.
  */
-function aurora_preprocess_comment(&$variables) {
-  $variables['user_picture'] = theme_get_setting('toggle_comment_user_picture') ? theme('user_picture', array('account' => $variables['comment'])) : '';
+function aurora_preprocess_comment(&$vars) {
+  $vars['user_picture'] = theme_get_setting('toggle_comment_user_picture') ? theme('user_picture', array('account' => $vars['comment'])) : '';
 }
 
 /**
@@ -238,8 +238,8 @@ function aurora_preprocess_comment(&$variables) {
  * Backports the following changes to made Drupal 8:
  * - #1190218: Convert user-profile-category.tpl.php to HTML5.
  */
-function aurora_preprocess_user_profile_category(&$variables) {
-  $variables['classes_array'][] = 'user-profile-category-' . drupal_html_class($variables['title']);
+function aurora_preprocess_user_profile_category(&$vars) {
+  $vars['classes_array'][] = 'user-profile-category-' . drupal_html_class($vars['title']);
 
   // We want to add some basic template suggestions, in case we are using
   // different view modes within our user display.
@@ -305,9 +305,9 @@ function aurora_css_alter(&$css) {
  * Backports the following changes made to Drupal 8:
  * - #1077602: Convert node.tpl.php to HTML5.
  */
-function aurora_preprocess_node(&$variables) {
+function aurora_preprocess_node(&$vars) {
   // Add article ARIA role.
-  $variables['attributes_array']['role'] = 'article';
+  $vars['attributes_array']['role'] = 'article';
 }
 
 function aurora_preprocess_panels_pane(&$vars) {
