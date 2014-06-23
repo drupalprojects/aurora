@@ -233,14 +233,11 @@ function aurora_preprocess_comment(&$vars) {
 }
 
 /**
- * Implements hook_preprocess_user_profile_category().
+ * Implements hook_preprocess_user_profile().
  *
- * Backports the following changes to made Drupal 8:
- * - #1190218: Convert user-profile-category.tpl.php to HTML5.
+ * Adds in some sensible user profile template suggestions.
  */
-function aurora_preprocess_user_profile_category(&$vars) {
-  $vars['classes_array'][] = 'user-profile-category-' . drupal_html_class($vars['title']);
-
+function aurora_preprocess_user_profile(&$vars) {
   // We want to add some basic template suggestions, in case we are using
   // different view modes within our user display.
   $view_mode = $vars['elements']['#view_mode'];
@@ -250,6 +247,16 @@ function aurora_preprocess_user_profile_category(&$vars) {
   $vars['theme_hook_suggestions'][] = 'user_profile__' . $view_mode;
   $vars['theme_hook_suggestions'][] = 'user_profile__' . $user->uid;
   $vars['theme_hook_suggestions'][] = 'user_profile__' . $view_mode . '__' . $user->uid;
+}
+
+/**
+ * Implements hook_preprocess_user_profile_category().
+ *
+ * Backports the following changes to made Drupal 8:
+ * - #1190218: Convert user-profile-category.tpl.php to HTML5.
+ */
+function aurora_preprocess_user_profile_category(&$vars) {
+  $vars['classes_array'][] = 'user-profile-category-' . drupal_html_class($vars['title']);
 }
 
 /**
