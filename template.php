@@ -238,15 +238,19 @@ function aurora_preprocess_comment(&$vars) {
  * Adds in some sensible user profile template suggestions.
  */
 function aurora_preprocess_user_profile(&$vars) {
-  // We want to add some basic template suggestions, in case we are using
-  // different view modes within our user display.
-  $view_mode = $vars['elements']['#view_mode'];
-  $user = $vars['elements']['#account'];
+  // There seems to be some issues in case 'elements' is not set. Just adding an
+  // if to do a quick check.
+  if (isset($vars['elements'])) {
+    // We want to add some basic template suggestions, in case we are using
+    // different view modes within our user display.
+    $view_mode = $vars['elements']['#view_mode'];
+    $user = $vars['elements']['#account'];
 
-  $vars['theme_hook_suggestions'][] = 'user_profile';
-  $vars['theme_hook_suggestions'][] = 'user_profile__' . $view_mode;
-  $vars['theme_hook_suggestions'][] = 'user_profile__' . $user->uid;
-  $vars['theme_hook_suggestions'][] = 'user_profile__' . $view_mode . '__' . $user->uid;
+    $vars['theme_hook_suggestions'][] = 'user_profile';
+    $vars['theme_hook_suggestions'][] = 'user_profile__' . $view_mode;
+    $vars['theme_hook_suggestions'][] = 'user_profile__' . $user->uid;
+    $vars['theme_hook_suggestions'][] = 'user_profile__' . $view_mode . '__' . $user->uid;
+  }
 }
 
 /**
