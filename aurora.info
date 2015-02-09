@@ -11,11 +11,6 @@ regions[footer]         = Footer
 plugins[panels][layouts] = layouts
 
 ; Theme Settings
-
-; Chrome Frame Options
-settings[aurora_enable_chrome_frame] = 1
 settings[aurora_min_ie_support] = 9
-
-; Miscelaneous Options
 settings[aurora_html_tags] = 1
 settings[aurora_typekit_id] =
