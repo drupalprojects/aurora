@@ -397,7 +397,9 @@ function aurora_preprocess_block(&$vars) {
   else if ($vars['block']->delta == 'blockify-page-title') {
     $vars['theme_hook_suggestions'][] = 'block__page_title';
 
-    $vars['title'] = drupal_get_title();
+    $vars['page_title'] = drupal_get_title();
+    // Add this for legacy support. Should not be used in the template. #2370653
+    $vars['title'] = $vars['page_title'];
   }
   else if ($vars['block']->delta == 'blockify-messages') {
     $vars['theme_hook_suggestions'][] = 'block__messages';
