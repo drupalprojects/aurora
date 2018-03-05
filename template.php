@@ -209,8 +209,13 @@ function aurora_process_html_tag(&$vars) {
   if (theme_get_setting('aurora_html_tags')) {
     $el = &$vars['element'];
 
-    // Remove type="..." and CDATA prefix/suffix.
-    unset($el['#attributes']['type'], $el['#value_prefix'], $el['#value_suffix']);
+    // Remove type="..." (except JSON-LD indicator) and CDATA prefix/suffix.
+    unset($el['#value_prefix'], $el['#value_suffix']);
+    if (isset($el['#attributes']['type'])) {
+      if ($el['#attributes']['type'] !== 'application/ld+json') {
+        unset($el['#attributes']['type']);
+      }
+    }
 
     // Remove media="all" but leave others unaffected.
     if (isset($el['#attributes']['media']) && $el['#attributes']['media'] === 'all') {
